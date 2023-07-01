@@ -1,6 +1,6 @@
 import click
 
-from chrate.app import app
+from chrate.model.rating import create_db, drop_db
 
 
 @click.group(help="Operate DB")
@@ -9,5 +9,13 @@ def db():
 
 
 @db.command()
-def init():
-    print("Init DB")
+@click.option("-c", "--clear", is_flag=True)
+def init(clear):
+    if clear:
+        drop_db()
+    create_db()
+
+
+@db.command()
+def drop():
+    drop_db()

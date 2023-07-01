@@ -32,10 +32,9 @@ class Game(Base):
     players = dborm.relationship("User", secondary=users_games, backref="games")
 
 
-def create_database():
+def create_db():
     Base.metadata.create_all(engine)
 
 
-if __name__ == "__main__":
-    create_database()
-    print("database has successfully been created")
+def drop_db():
+    Base.metadata.drop_all(engine)
