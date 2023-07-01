@@ -1,5 +1,5 @@
 class Player:
-    _k_factor = 16
+    _k_factor = 32
 
     def __init__(self, rating=1000):
         self.rating = rating
