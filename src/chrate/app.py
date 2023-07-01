@@ -58,6 +58,22 @@ def game_record():
         return flask.redirect("/")
 
 
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "GET":
+        return flask.render_template("register.html")
+    else:
+        firstname = request.form.get("firstname")
+        lastname = request.form.get("lastname")
+        user = User(firstname=firstname, lastname=lastname)
+        logger.info(f"Rcvd: {firstname}, {lastname}")
+
+        with Session(engine) as session:
+            session.add(user)
+            session.commit()
+        return flask.redirect("/")
+
+
 @app.route("/test")
 def test():
     with Session(engine) as session:
