@@ -18,10 +18,10 @@ class User(Base):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(255))
     password = db.Column(db.String(255))
-    rating = db.Column(db.Integer)
-    firstname = db.Column(db.String(255))
+    rating = db.Column(db.Integer, nullable=False)
+    firstname = db.Column(db.String(255), nullable=False)
     middlename = db.Column(db.String(255))
-    lastname = db.Column(db.String(255))
+    lastname = db.Column(db.String(255), nullable=False)
 
 
 class Game(Base):

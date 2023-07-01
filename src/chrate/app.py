@@ -3,6 +3,9 @@ from flask import Flask
 from chrate.model.rating import Game, User, engine
 from sqlalchemy.orm import Session
 from sqlalchemy import select
+from chess_rating.player import Player as PlayerModel
+from chess_rating.game import Game as GameModel
+
 
 app = Flask(__name__)
 
@@ -22,6 +25,7 @@ def game_record():
 @app.route("/game-record/submit", methods=["POST"])
 def game_submission():
     results = {"white": 1, "tie": 0, "black": -1}
+
     first_player_name = flask.request.form.get("fpname")
     second_player_name = flask.request.form.get("spname")
     result = flask.request.form.get("res")
@@ -32,13 +36,26 @@ def game_submission():
             result=results[result]
         )
 
-        player1 = select(User).filter_by(firstname=first_player_name.split()[0], lastname=first_player_name.split()[-1])
-        player2 = select(User).filter_by(firstname=second_player_name.split()[0], lastname=second_player_name.split()[-1])
+        p1query = select(User).where(User.firstname == first_player_name.split()[0],
+                                     User.lastname == first_player_name.split()[-1])
+        player1 = session.execute(p1query).first()[0]
+        p2query = select(User).where(User.firstname == second_player_name.split()[0],
+                                     User.lastname == second_player_name.split()[-1])
+        player2 = session.execute(p2query).first()[0]
 
         submitted_game.players.append(player1)
         submitted_game.players.append(player2)
 
-        session.add_all(submitted_game)
+        player1_model = PlayerModel(player1.rating)
+        player2_model = PlayerModel(player2.rating)
+        game_model = GameModel(player1_model, player2_model)
+        results = {"white": 1, "tie": 0.5, "black": 0}
+        game_model.game(results[result])
+
+        player1.rating = player1_model.rating
+        player2.rating = player2_model.rating
+
+        session.add_all([submitted_game, player1, player2])
         session.commit()
     return flask.redirect("/")
 
@@ -46,11 +63,8 @@ def game_submission():
 @app.route("/test")
 def test():
     with Session(engine) as session:
-        player1 = User(firstname="Foo", lastname="Barr")
-        player2 = User(firstname="Vasya", lastname="Pupkin")
-        game1 = Game(result="1")
-        game1.players.append(player1)
-        session.add_all([player1, player2, game1])
+        player1 = User(firstname="Foo", lastname="Barr", rating=1000)
+        player2 = User(firstname="Vasya", lastname="Pupkin", rating=1200)
+        session.add_all([player1, player2])
         session.commit()
-        print(player1.games[0].result)
     return "Done"
