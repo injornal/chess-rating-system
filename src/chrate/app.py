@@ -1,3 +1,5 @@
+from hashlib import sha256
+
 import flask
 from flask import Flask, request
 from chrate.model.rating import Game, User, engine
@@ -14,7 +16,7 @@ logger = app.logger
 
 @app.route("/")
 def home_page():
-    return "Welcome to Lynbrook Chess!"
+    return flask.render_template("home.html")
 
 
 @app.route("/game-record", methods=["GET", "POST"])
@@ -24,8 +26,8 @@ def game_record():
     else:
         results = {"white": 1, "tie": 0, "black": -1}
 
-        first_player_name = flask.request.form.get("fpname")
-        second_player_name = flask.request.form.get("spname")
+        first_player_name = flask.request.form.get("wname")
+        second_player_name = flask.request.form.get("bname")
         result = flask.request.form.get("res")
         logger.info(f"Rcvd: {first_player_name}, {second_player_name}, {result}")
 
@@ -65,13 +67,20 @@ def register():
     else:
         firstname = request.form.get("firstname")
         lastname = request.form.get("lastname")
-        user = User(firstname=firstname, lastname=lastname)
+        password = sha256(request.form.get("password").encode()).hexdigest()
+        user = User(firstname=firstname, lastname=lastname, password=password)
         logger.info(f"Rcvd: {firstname}, {lastname}")
 
         with Session(engine) as session:
             session.add(user)
             session.commit()
         return flask.redirect("/")
+
+
+@app.route("/sign-in", methods=["GET", "POST"])
+def sign_in():
+    if request.method == "GET":
+        return flask.render_template("sign-in.html")
 
 
 @app.route("/test")
