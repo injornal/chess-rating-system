@@ -1,35 +1,33 @@
-from hashlib import sha256
-
-import flask
-from flask import Flask, request
+from flask import Flask, request, render_template, redirect
 from chrate.model.rating import Game, User, engine
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from chess_rating.player import Player as PlayerModel
 from chess_rating.game import Game as GameModel
-
+from chrate.blueprints.profile.profile import profile_bp
+from chrate.blueprints.register.register import register_bp
 
 app = Flask(__name__)
 
-logger = app.logger
+app.register_blueprint(profile_bp)
+app.register_blueprint(register_bp)
 
 
 @app.route("/")
 def home_page():
-    return flask.render_template("home.html")
+    return render_template("home.html")
 
 
 @app.route("/game-record", methods=["GET", "POST"])
 def game_record():
     if request.method == "GET":
-        return flask.render_template('game_record.html')
+        return render_template('game_record.html')
     else:
         results = {"white": 1, "tie": 0, "black": -1}
 
-        first_player_name = flask.request.form.get("wname")
-        second_player_name = flask.request.form.get("bname")
-        result = flask.request.form.get("res")
-        logger.info(f"Rcvd: {first_player_name}, {second_player_name}, {result}")
+        first_player_name = request.form.get("wname")
+        second_player_name = request.form.get("bname")
+        result = request.form.get("res")
 
         with Session(engine) as session:
             submitted_game = Game(
@@ -57,30 +55,13 @@ def game_record():
 
             session.add_all([submitted_game, player1, player2])
             session.commit()
-        return flask.redirect("/")
-
-
-@app.route("/register", methods=["GET", "POST"])
-def register():
-    if request.method == "GET":
-        return flask.render_template("register.html")
-    else:
-        firstname = request.form.get("firstname")
-        lastname = request.form.get("lastname")
-        password = sha256(request.form.get("password").encode()).hexdigest()
-        user = User(firstname=firstname, lastname=lastname, password=password)
-        logger.info(f"Rcvd: {firstname}, {lastname}")
-
-        with Session(engine) as session:
-            session.add(user)
-            session.commit()
-        return flask.redirect("/")
+        return redirect("/")
 
 
 @app.route("/sign-in", methods=["GET", "POST"])
 def sign_in():
     if request.method == "GET":
-        return flask.render_template("sign-in.html")
+        return render_template("sign-in.html")
 
 
 @app.route("/test")
