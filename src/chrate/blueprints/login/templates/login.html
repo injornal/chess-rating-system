@@ -1,4 +1,9 @@
 {% extends 'base.html' %}
+
+{% block styles %}
+<link rel="stylesheet" href='/login/static/styles/login.css' />
+{% endblock %}
+
 {% block content %}
 <form action="/login" method="post">
   <label for="email">email</label><br>
@@ -8,4 +13,5 @@
   <input type="submit" value="Login">
   <a href="/register"> Register</a>
 </form>
+<a class="error">{{ message }}</a>
 {% endblock %}
