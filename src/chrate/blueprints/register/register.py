@@ -13,8 +13,10 @@ def register():
     else:
         firstname = request.form.get("firstname")
         lastname = request.form.get("lastname")
+        username = request.form.get("username")
+        email = request.form.get("email")
         password = sha256(request.form.get("password").encode()).hexdigest()
-        user = User(firstname=firstname, lastname=lastname, password=password)
+        user = User(firstname=firstname, lastname=lastname, password=password, username=username, email=email)
 
         with Session(engine) as session:
             session.add(user)

@@ -16,8 +16,9 @@ users_games = db.Table(
 class User(Base):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(255))
-    password = db.Column(db.String(255))
+    username = db.Column(db.String(255), nullable=False)
+    email = db.Column(db.String(255), nullable=False)
+    password = db.Column(db.String(255), nullable=False)
     rating = db.Column(db.Integer, nullable=False, default=1000)
     firstname = db.Column(db.String(255), nullable=False)
     middlename = db.Column(db.String(255))

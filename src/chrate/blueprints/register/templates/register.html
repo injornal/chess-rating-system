@@ -2,14 +2,16 @@
 
 {% block content %}
 <form action="/register" method="post">
-  <label for="firstname">first name:</label><br>
-  <input type="text" id="firstname" name="firstname"><br>
+  <label for="firstname" >first name:</label><br>
+  <input type="text" id="firstname" name="firstname" required><br>
   <label for="lastname">last name:</label><br>
-  <input type="text" id="lastname" name="lastname"><br>
+  <input type="text" id="lastname" name="lastname" required><br>
   <label for="email">email:</label><br>
-  <input type="email" id="email" name="email"><br>
+  <input type="email" id="email" name="email" required><br>
+  <label for="username">username:</label><br>
+  <input type="text" id="username" name="username" required><br>
   <label for="password">password</label><br>
-  <input type="text" id="password" name="password"><br><br>
+  <input type="password" id="password" name="password" required><br><br>
   <input type="submit" value="Register">
 </form>
 {% endblock %}
