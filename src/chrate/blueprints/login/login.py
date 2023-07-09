@@ -1,4 +1,8 @@
-from flask import blueprints, request, render_template
+from flask import blueprints, request, render_template, redirect
+from chrate.model.rating import User, engine
+from sqlalchemy import select
+from sqlalchemy.orm import Session
+from hashlib import sha256
 
 login_bp = blueprints.Blueprint("login", __name__, template_folder="templates", url_prefix="/login")
 
@@ -7,3 +11,14 @@ login_bp = blueprints.Blueprint("login", __name__, template_folder="templates", 
 def sign_in():
     if request.method == "GET":
         return render_template("login.html")
+    else:
+        email = request.form.get("email")
+        password = sha256(request.form.get("password").encode()).hexdigest()
+        with Session(engine) as session:
+            query = select(User).where(User.email == email)
+            user = session.execute(query).first()[0]
+
+        if user.password == password:
+            return redirect("/profile")
+        else:
+            return redirect("/login")
