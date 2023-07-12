@@ -1,5 +1,4 @@
 blinker==1.6.2
--e git+https://github.com/injornal/chess-rating-system.git@07b89efcb093d97a313ac64bf2f9549b7be7edca#egg=chrate
 click==8.1.4
 Flask==2.3.2
 Flask-SQLAlchemy==3.0.5
