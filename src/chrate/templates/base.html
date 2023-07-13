@@ -1,22 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-  {% block styles %}{% endblock %}
-  <title>Chess</title>
-</head>
-<body>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <ul class="navbar-nav collapse navbar-collapse justify-content-center">
-      <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-      <li class="nav-item"><a class="nav-link" href="/game/record">Submit game</a></li>
-      <li class="nav-item"><a class="nav-link" href="/profile">Profile</a></li>
-      <li class="nav-item"><a class="nav-link" href="/login">Sign in | Register</a></li>
-    </ul>
-  </nav>
-  <div class="content">
-    {% block content %}{% endblock %}
-  </div>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+    <title>Chess</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand navbar-light bg-light">
+      <a class="navbar-brand" href="/">
+        <img src="{{ url_for('static', filename='knight.svg') }}" class="navbar-brand"/>Chess
+      </a>
+      <ul class="navbar-nav collapse navbar-collapse justify-content-center">
+        {% if "user_id" in session %}
+        <li class="nav-item">
+          <a class="nav-link" href="/tournament">Tournament</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/profile">Profile</a>
+        </li>
+        <li class="nav-item">
+          <a href="/login/logout" class="nav-link">Sign out</a>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="/login">Sign in | Register</a>
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
+    <div class="content">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endwith %}
+      <div class="container">
+          <div class="col-2"></div>
+          <div class="col">{% block content %}{% endblock %}</div>
+          <div class="col-2"></div>
+      </div>
+    </div>
+  </body>
 </html>

@@ -2,8 +2,8 @@ from flask import blueprints, request, render_template, redirect
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from chrate.model.rating import engine, Game, User
-from chess_rating.game import Game as GameModel
-from chess_rating.player import Player as PlayerModel
+from rating_model.game import Game as GameModel
+from rating_model.player import Player as PlayerModel
 
 
 game_bp = blueprints.Blueprint("game", __name__, template_folder="templates", url_prefix="/game")

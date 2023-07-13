@@ -1,0 +1,9 @@
+{% extends 'base.html' %} {% block content %}
+<form action="/tournament/create" method="post">
+  <label for="date">Date of the tournament:</label><br />
+  <input type="datetime-local" name="date" id="date" /><br />
+  <label for="rated"> Rated</label>
+  <input type="checkbox" name="rated" id="rated" checked />
+  <button type="submit">Request</button>
+</form>
+{% endblock %}

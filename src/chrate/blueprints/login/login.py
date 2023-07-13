@@ -1,4 +1,4 @@
-from flask import blueprints, request, render_template, redirect
+from flask import blueprints, request, render_template, redirect, session as flask_session, flash
 from chrate.model.rating import User, engine
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -22,6 +22,14 @@ def sign_in():
                 user = user[0]
 
         if user and user.password == password:
+            flask_session["user_id"] = user.id
             return redirect("/profile")
         else:
-            return render_template("login.html", message="wrong username or password")
+            flash("wrong password or username", "danger")
+            return render_template("login.html")
+
+
+@login_bp.route("/logout")
+def logout():
+    del flask_session["user_id"]
+    return redirect("/")

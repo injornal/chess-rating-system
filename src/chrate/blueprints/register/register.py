@@ -21,4 +21,4 @@ def register():
         with Session(engine) as session:
             session.add(user)
             session.commit()
-        return redirect("/")
+        return redirect("/login")
