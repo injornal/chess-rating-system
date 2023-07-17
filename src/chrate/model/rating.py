@@ -1,5 +1,8 @@
 import sqlalchemy as db
 import sqlalchemy.orm as dborm
+from sqlalchemy.orm import Mapped
+from sqlalchemy import Column
+
 
 Base = dborm.declarative_base()
 engine = db.create_engine("postgresql://chess:lynbrook_chess@localhost:5432/chess_database")
@@ -12,8 +15,15 @@ users_games = db.Table(
     db.Column("user_id", db.ForeignKey("users.id"))
 )
 
+users_tournaments = db.Table(
+    "users_tournaments",
+    Base.metadata,
+    db.Column("tournaments_id", db.ForeignKey("tournaments.id")),
+    db.Column("user_id", db.ForeignKey("users.id"))
+)
 
-class User(Base):
+
+class Users(Base):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(255), nullable=False)
@@ -24,13 +34,26 @@ class User(Base):
     middlename = db.Column(db.String(255))
     lastname = db.Column(db.String(255), nullable=False)
 
+    tournaments = dborm.relationship("Tournaments", secondary=users_tournaments, back_populates="users", lazy="subquery")
+    games = dborm.relationship("Games", secondary=users_games, back_populates="users", lazy="subquery")
 
-class Game(Base):
+
+class Games(Base):
     __tablename__ = "games"
     id = db.Column(db.Integer, primary_key=True)
     result = db.Column(db.Integer)
 
-    players = dborm.relationship("User", secondary=users_games, backref="games")
+    users = dborm.relationship("Users", secondary=users_games, back_populates="games", lazy="subquery")
+
+
+class Tournaments(Base):
+    __tablename__ = "tournaments"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), nullable=False)
+    rated = db.Column(db.Boolean, nullable=False)
+    date = db.Column(db.DateTime, nullable=False)
+
+    users = dborm.relationship("Users", secondary=users_tournaments, back_populates="tournaments", lazy="subquery")
 
 
 def create_db():

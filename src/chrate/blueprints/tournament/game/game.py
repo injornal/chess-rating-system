@@ -1,7 +1,7 @@
 from flask import blueprints, request, render_template, redirect
 from sqlalchemy.orm import Session
 from sqlalchemy import select
-from chrate.model.rating import engine, Game, User
+from chrate.model.rating import engine, Games, Users
 from rating_model.game import Game as GameModel
 from rating_model.player import Player as PlayerModel
 
@@ -21,15 +21,15 @@ def game_record():
         result = request.form.get("res")
 
         with Session(engine) as session:
-            submitted_game = Game(
+            submitted_game = Games(
                 result=results[result]
             )
 
-            p1query = select(User).where(User.firstname == first_player_name.split()[0],
-                                         User.lastname == first_player_name.split()[-1])
+            p1query = select(Users).where(Users.firstname == first_player_name.split()[0],
+                                          Users.lastname == first_player_name.split()[-1])
             player1 = session.execute(p1query).first()[0]
-            p2query = select(User).where(User.firstname == second_player_name.split()[0],
-                                         User.lastname == second_player_name.split()[-1])
+            p2query = select(Users).where(Users.firstname == second_player_name.split()[0],
+                                          Users.lastname == second_player_name.split()[-1])
             player2 = session.execute(p2query).first()[0]
 
             submitted_game.players.append(player1)

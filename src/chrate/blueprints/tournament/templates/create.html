@@ -1,9 +1,12 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %} 
+
+{% block content %}
+<h1 class="text-center">Create tournament</h1>
 <form action="/tournament/create" method="post">
-  <label for="date">Date of the tournament:</label><br />
+  <input type="text" placeholder="Name" name="name" id="name" /><br />
   <input type="datetime-local" name="date" id="date" /><br />
   <label for="rated"> Rated</label>
-  <input type="checkbox" name="rated" id="rated" checked />
-  <button type="submit">Request</button>
+  <input type="checkbox" name="rated" id="rated" checked /> <br />
+  <button type="submit">Create</button>
 </form>
 {% endblock %}

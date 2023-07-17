@@ -2,5 +2,16 @@
 
 {% block content %}
   <h1 class="text-center">Profile</h1>
-  <p>username: {{ username }}</p>
+  <ul>
+    <li>username: {{ user.username }}</li>
+    <li>name: {{ user.firstname + " " + (user.middlename + " " if user.middlename else "") + user.lastname }}</li>
+    <li>rating: {{ user.rating }}</li>
+    <li>Tournaments:
+      <ul>
+        {% for tournament in user.tournaments %}
+        <li>{{ tournament.name }}</li>
+        {% endfor %}
+      </ul>
+    </li>
+  </ul>
 {% endblock %}

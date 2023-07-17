@@ -1,5 +1,5 @@
 from flask import blueprints, request, render_template, redirect, session as flask_session, flash
-from chrate.model.rating import User, engine
+from chrate.model.rating import Users, engine
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from hashlib import sha256
@@ -16,7 +16,7 @@ def sign_in():
         email = request.form.get("email")
         password = sha256(request.form.get("password").encode()).hexdigest()
         with Session(engine) as session:
-            query = select(User).where(User.email == email)
+            query = select(Users).where(Users.email == email)
             user = session.execute(query).first()
             if user:
                 user = user[0]
@@ -25,7 +25,7 @@ def sign_in():
             flask_session["user_id"] = user.id
             return redirect("/profile")
         else:
-            flash("wrong password or username", "danger")
+            flash("Wrong password or username", "warning")
             return render_template("login.html")
 
 

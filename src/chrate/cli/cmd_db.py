@@ -10,7 +10,7 @@ def db():
 
 @db.command()
 @click.option("-c", "--clear", is_flag=True)
-def init(clear, base):
+def init(clear):
     if clear:
         drop_db()
     create_db()

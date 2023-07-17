@@ -1,6 +1,6 @@
 from hashlib import sha256
 from flask import request, render_template, blueprints, redirect
-from chrate.model.rating import User, engine
+from chrate.model.rating import Users, engine
 from sqlalchemy.orm import Session
 
 register_bp = blueprints.Blueprint("register", __name__, template_folder="templates", url_prefix="/register")
@@ -16,7 +16,7 @@ def register():
         username = request.form.get("username")
         email = request.form.get("email")
         password = sha256(request.form.get("password").encode()).hexdigest()
-        user = User(firstname=firstname, lastname=lastname, password=password, username=username, email=email)
+        user = Users(firstname=firstname, lastname=lastname, password=password, username=username, email=email)
 
         with Session(engine) as session:
             session.add(user)

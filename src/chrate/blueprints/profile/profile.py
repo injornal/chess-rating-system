@@ -1,5 +1,5 @@
-from flask import blueprints, render_template, session as flask_session
-from chrate.model.rating import User, engine
+from flask import blueprints, render_template, session as flask_session, redirect
+from chrate.model.rating import Users, engine, Tournaments
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 
@@ -10,6 +10,12 @@ profile_bp = blueprints.Blueprint("profile", __name__, template_folder="template
 def profile():
     if "user_id" in flask_session:
         with Session(engine) as session:
-            query = select(User).where(User.id == flask_session["user_id"])
-            user = session.execute(query).first()[0]
-    return render_template("profile.html", username=user.username)
+            query = select(Users).where(Users.id == flask_session["user_id"])
+            user = session.execute(query).first()
+            if user:
+                user = user[0]
+            else:
+                return redirect("/login")
+    print(user.firstname)
+    print(user.tournaments)
+    return render_template("profile.html", user=user)
