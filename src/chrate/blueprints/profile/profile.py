@@ -16,6 +16,4 @@ def profile():
                 user = user[0]
             else:
                 return redirect("/login")
-    print(user.firstname)
-    print(user.tournaments)
     return render_template("profile.html", user=user)

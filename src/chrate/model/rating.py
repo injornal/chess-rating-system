@@ -44,6 +44,7 @@ class Games(Base):
     result = db.Column(db.Integer)
 
     users = dborm.relationship("Users", secondary=users_games, back_populates="games", lazy="subquery")
+    tournament_id = db.Column(db.Integer, db.ForeignKey("tournaments.id"))
 
 
 class Tournaments(Base):
@@ -54,6 +55,7 @@ class Tournaments(Base):
     date = db.Column(db.DateTime, nullable=False)
 
     users = dborm.relationship("Users", secondary=users_tournaments, back_populates="tournaments", lazy="subquery")
+    games = dborm.relationship("Games")
 
 
 def create_db():

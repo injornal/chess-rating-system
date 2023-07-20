@@ -1,17 +1,56 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1 class="text-center">Profile</h1>
-  <ul>
-    <li>username: {{ user.username }}</li>
-    <li>name: {{ user.firstname + " " + (user.middlename + " " if user.middlename else "") + user.lastname }}</li>
-    <li>rating: {{ user.rating }}</li>
-    <li>Tournaments:
-      <ul>
-        {% for tournament in user.tournaments %}
-        <li>{{ tournament.name }}</li>
-        {% endfor %}
-      </ul>
-    </li>
-  </ul>
+<h1 class="text-center">Profile</h1>
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col">
+              <p>Username</p>
+            </div>
+            <div class="col">
+              <p class="text-muted">{{ user.username }}</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <p>Name</p>
+            </div>
+            <div class="col">
+              <p class="text-muted">{{ user.firstname + " " + (user.middlename + " " if user.middlename else "") + user.lastname }}</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <p>Rating</p>
+            </div>
+            <div class="col">
+              <p class="text-muted">{{ user.rating }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <h5 class="card-title text-center">Tournaments</h5>
+        <div class="card-body">
+          {% for tournament in user.tournaments %}
+          <div class="row">
+            <div class="col">
+              <p>{{ tournament.name }}</p>
+            </div>
+            <div class="col">
+              <p class="text-muted">{{ tournament.date.strftime("%m/%d/%Y %I:%M%p") }}</p>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 
 {% endblock %}
