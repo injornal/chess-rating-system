@@ -4,8 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 from hashlib import sha256
 
-login_bp = blueprints.Blueprint("login", __name__, template_folder="templates", static_folder='static',
-                                url_prefix="/login")
+login_bp = blueprints.Blueprint("login", __name__, template_folder="templates", url_prefix="/login")
 
 
 @login_bp.route("/", methods=["GET", "POST"])
