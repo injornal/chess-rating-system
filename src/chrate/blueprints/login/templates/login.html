@@ -4,13 +4,18 @@
 {% endblock %}
 
 {% block content %}
-<form action="/login" method="post">
-  <label for="email">email</label><br>
-  <input type="text" id="email" name="email"><br>
-  <label for="password">password</label><br>
-  <input type="password" id="password" name="password"><br><br>
-  <input type="submit" value="Login">
-  <a href="/register"> Register</a>
-</form>
-<a class="error">{{ message }}</a>
+<div class="card" style="width: 18rem;">
+  <div class="card-body">
+    <form action="/login" method="post">
+      <div class="vstack gap-3">
+        <input class="form-control" type="email" id="email" name="email" placeholder="Email" required>
+        <input class="form-control" type="password" id="password" name="password" placeholder="Password" required>
+        <div>
+          <input class="btn btn-primary" type="submit" value="Login">
+          <a class="btn btn-link" href="/register"> Register</a>
+        </div>
+      </div>
+    </form>
+  </div>  
+</div>
 {% endblock %}
