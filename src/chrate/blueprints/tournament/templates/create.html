@@ -1,13 +1,23 @@
 {% extends 'base.html' %} 
 
 {% block content %}
-<h1 class="text-center">Create tournament</h1>
-<form action="/tournament/create" method="post">
-  <input type="text" placeholder="Name" name="name" id="name" /><br />
-  <input type="datetime-local" name="date" id="date" /><br />
-  <label for="rated">Rated</label>
-  <input type="checkbox" name="rated" id="rated" checked /> <br />
-  <input type="text" placeholder="description" name="description" id="description">
-  <button type="submit">Create</button>
-</form>
+<div class="card" style="width: 18rem;">
+  <h5 class="card-header">Create tournament</h5>
+  <div class="card-body">
+    <form action="/tournament/create" method="post">
+      <div class="vstack gap-3"> 
+        <input class="form-control" type="text" placeholder="Name" name="name" id="name" />
+        <input class="form-control" type="datetime-local" name="date" id="date" />
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="rated" id="rated" checked>
+          <label class="form-check-label" for="rated">
+            Rated
+          </label>
+        </div>
+        <input class="form-control" type="text" placeholder="Description" name="description" id="description">
+        <button class="btn btn-primary" type="submit">Create</button>
+      </div>
+      </form>
+  </div>
+</div>
 {% endblock %}
