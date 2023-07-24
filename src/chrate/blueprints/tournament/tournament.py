@@ -30,9 +30,10 @@ def create():
         name = request.form.get("name")
         date = datetime.strptime(request.form.get("date"), "%Y-%m-%dT%H:%M")
         rated = request.form.get("rated")
+        description = request.form.get("description")
 
         with Session(engine) as session:
-            new_tournament = Tournaments(name=name, date=date, rated=rated == "on")
+            new_tournament = Tournaments(name=name, date=date, rated=rated == "on", description=description)
             session.add(new_tournament)
             session.commit()
 

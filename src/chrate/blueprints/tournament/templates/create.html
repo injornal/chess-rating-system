@@ -5,8 +5,9 @@
 <form action="/tournament/create" method="post">
   <input type="text" placeholder="Name" name="name" id="name" /><br />
   <input type="datetime-local" name="date" id="date" /><br />
-  <label for="rated"> Rated</label>
+  <label for="rated">Rated</label>
   <input type="checkbox" name="rated" id="rated" checked /> <br />
+  <input type="text" placeholder="description" name="description" id="description">
   <button type="submit">Create</button>
 </form>
 {% endblock %}
