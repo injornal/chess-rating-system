@@ -10,8 +10,16 @@ tournament_bp.register_blueprint(game_bp)
 
 
 @tournament_bp.route("/")
-def tournament():
+def tournament_home():
     return render_template("tournament.html")
+
+
+@tournament_bp.route("/profile/<tournament_id>")
+def profile(tournament_id):
+    with Session(engine) as session:
+        query = select(Tournaments).where(Tournaments.id == tournament_id)
+        tournament = session.execute(query).first()[0]
+    return render_template("tournament_profile.html", tournament=tournament)
 
 
 @tournament_bp.route("/create", methods=["GET", "POST"])
@@ -35,14 +43,14 @@ def create():
 @tournament_bp.route("/register/<tournament_id>")
 def register(tournament_id):
     with Session(engine) as session:
-        tournament_to_register = select(Tournaments).where(Tournaments.id == int(tournament_id))
+        tournament = select(Tournaments).where(Tournaments.id == int(tournament_id))
         user = select(Users).where(Users.id == flask_session["user_id"])
         user = session.execute(user).first()[0]
-        tournament_to_register = session.execute(tournament_to_register).first()[0]
+        tournament = session.execute(tournament).first()[0]
 
-        tournament_to_register.users.append(user)
+        tournament.users.append(user)
 
-        session.add(tournament_to_register)
+        session.add(tournament)
         session.commit()
     flash("Registered", "success")
     return redirect("/profile")

@@ -53,6 +53,7 @@ class Tournaments(Base):
     name = db.Column(db.String(255), nullable=False)
     rated = db.Column(db.Boolean, nullable=False)
     date = db.Column(db.DateTime, nullable=False)
+    description = db.Column(db.String(255), default="Friendly community")
 
     users = dborm.relationship("Users", secondary=users_tournaments, back_populates="tournaments", lazy="subquery")
     games = dborm.relationship("Games")
