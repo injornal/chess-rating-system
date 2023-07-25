@@ -1,11 +1,13 @@
 import sqlalchemy as db
 import sqlalchemy.orm as dborm
-from sqlalchemy.orm import Mapped
 from sqlalchemy import Column
+import json
 
+with open('settings.json') as settings_file:
+    settings = json.load(settings_file)
 
 Base = dborm.declarative_base()
-engine = db.create_engine("postgresql://chess:lynbrook_chess@localhost:5432/chess_database")
+engine = db.create_engine(settings["ENGINE_USED"])
 
 
 # users_games = db.Table(
@@ -44,7 +46,8 @@ class Users(Base):
     middlename = db.Column(db.String(255))
     lastname = db.Column(db.String(255), nullable=False)
 
-    tournaments = dborm.relationship("Tournaments", secondary=users_tournaments, back_populates="users", lazy="subquery")
+    tournaments = dborm.relationship("Tournaments", secondary=users_tournaments, back_populates="users",
+                                     lazy="subquery")
     games = dborm.relationship("UsersGames", back_populates="users", lazy="subquery")
 
 
