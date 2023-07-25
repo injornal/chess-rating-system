@@ -2,31 +2,38 @@
 
 {% block content %}
 <h1 class="text-center">{{ tournament.name }} tournament</h1>
-<div class="row">
-    <div class="col">
-        <div class="card">
-            <h5 class="card-header text-center">Participants</h5>
-            <div class="card-body">
-              {% for user in tournament.users %}
-              <div class="row">
-                <div class="col">
-                  <p>{{ user.firstname }}</p>
-                </div>
-                <div class="col">
-                  <p class="text-muted">{{ user.rating }}</p>
-                </div>
-              </div>
-              {% endfor %}
-            </div>
+<div class="card">
+    <h5 class="card-header text-center">Participants</h5>
+    <div class="card-body">
+        {% for user in tournament.users %}
+        <div class="row">
+        <div class="col">
+            <p>{{ user.firstname }}</p>
         </div>
+        <div class="col">
+            <p class="text-muted">{{ user.rating }}</p>
+        </div>
+        </div>
+        {% endfor %}
     </div>
-    <div class="col">
+</div>
+<div class="card">
+    <h5 class="card-header">Description</h5>
+    <div class="card-body">
+        {{ tournament.description }}
+    </div>
+</div>
+<div class="card">
+    <h5 class="card-header">Games</h5>
+    <div class="card-body">
+        {% for game in games %}
         <div class="card">
-            <h5 class="card-header">Description</h5>
             <div class="card-body">
-              {{ tournament.description }}
+                <p>White: <a href="/profile/{{game['white'].id}}" class="text-decoration-none text-black">{{game["white"].username}} {{"🏆" if game["winner"]}}</a></p>
+                <p>Black: <a href="/profile/{{game['black'].id}}" class="text-decoration-none text-black">{{game["black"].username}} {{"🏆" if not game["winner"]}}</a></p>
             </div>
         </div>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}

@@ -1,5 +1,7 @@
 {% extends 'base.html' %} {% block content %}
 <form action="/tournament/game/record" method="post">
+  <label for="trn">Tournament:</label><br />
+  <input type="text" id="trn" name="trn" /><br />
   <label for="wname">white:</label><br />
   <input type="text" id="wname" name="wname" /><br />
   <label for="bname">black:</label><br />

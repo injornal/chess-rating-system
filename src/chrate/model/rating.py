@@ -8,12 +8,22 @@ Base = dborm.declarative_base()
 engine = db.create_engine("postgresql://chess:lynbrook_chess@localhost:5432/chess_database")
 
 
-users_games = db.Table(
-    "users_games",
-    Base.metadata,
-    db.Column("game_id", db.ForeignKey("games.id")),
-    db.Column("user_id", db.ForeignKey("users.id"))
-)
+# users_games = db.Table(
+#     "users_games",
+#     Base.metadata,
+#     db.Column("game_id", db.ForeignKey("games.id")),
+#     db.Column("user_id", db.ForeignKey("users.id")),
+#     db.Column("color", db.Boolean)
+# )
+
+class UsersGames(Base):
+    __tablename__ = "users_games"
+    game_id = Column(db.ForeignKey("games.id"), primary_key=True)
+    user_id = Column(db.ForeignKey("users.id"), primary_key=True)
+    color = Column(db.Boolean)
+    users = dborm.relationship("Users", back_populates="games", lazy="subquery")
+    games = dborm.relationship("Games", back_populates="users", lazy="subquery")
+
 
 users_tournaments = db.Table(
     "users_tournaments",
@@ -35,7 +45,7 @@ class Users(Base):
     lastname = db.Column(db.String(255), nullable=False)
 
     tournaments = dborm.relationship("Tournaments", secondary=users_tournaments, back_populates="users", lazy="subquery")
-    games = dborm.relationship("Games", secondary=users_games, back_populates="users", lazy="subquery")
+    games = dborm.relationship("UsersGames", back_populates="users", lazy="subquery")
 
 
 class Games(Base):
@@ -43,7 +53,7 @@ class Games(Base):
     id = db.Column(db.Integer, primary_key=True)
     result = db.Column(db.Integer)
 
-    users = dborm.relationship("Users", secondary=users_games, back_populates="games", lazy="subquery")
+    users = dborm.relationship("UsersGames", back_populates="games", lazy="subquery")
     tournament_id = db.Column(db.Integer, db.ForeignKey("tournaments.id"))
 
 
@@ -56,7 +66,7 @@ class Tournaments(Base):
     description = db.Column(db.String(255), default="Friendly community")
 
     users = dborm.relationship("Users", secondary=users_tournaments, back_populates="tournaments", lazy="subquery")
-    games = dborm.relationship("Games")
+    games = dborm.relationship("Games", lazy="subquery")
 
 
 def create_db():

@@ -14,12 +14,26 @@ def tournament_home():
     return render_template("tournament.html")
 
 
-@tournament_bp.route("/profile/<tournament_id>")
+@tournament_bp.route("/profile/<int:tournament_id>")
 def profile(tournament_id):
     with Session(engine) as session:
         query = select(Tournaments).where(Tournaments.id == tournament_id)
         tournament = session.execute(query).first()[0]
-    return render_template("tournament_profile.html", tournament=tournament)
+
+    games = []
+    for game in tournament.games:
+        for assoc in game.users:
+            if assoc.color:
+                white = assoc.users
+            else:
+                black = assoc.users
+        games.append({
+            "white": white,
+            "black": black,
+            "winner": game.result
+        })
+
+    return render_template("tournament_profile.html", tournament=tournament, games=games)
 
 
 @tournament_bp.route("/create", methods=["GET", "POST"])

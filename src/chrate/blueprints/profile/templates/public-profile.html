@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+    <h5 class="card-header text-center">Personal Info</h5>
+    <div class="card-body">
+        <div class="row">
+        <div class="col">
+            <p>Username</p>
+        </div>
+        <div class="col">
+            <p class="text-muted">{{ user.username }}</p>
+        </div>
+        </div>
+        <div class="row">
+        <div class="col">
+            <p>Name</p>
+        </div>
+        <div class="col">
+            <p class="text-muted">{{ user.firstname + " " + (user.middlename + " " if user.middlename else "") + user.lastname }}</p>
+        </div>
+        </div>
+        <div class="row">
+        <div class="col">
+            <p>Rating</p>
+        </div>
+        <div class="col">
+            <p class="text-muted">{{ user.rating }}</p>
+        </div>
+        </div>
+    </div>
+  </div>
+{% endblock %}

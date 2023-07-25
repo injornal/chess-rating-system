@@ -37,9 +37,12 @@
     </div>
     <div class="col">
       <div class="card">
-        <h5 class="card-header text-center">Tournaments</h5>
+        <h5 class="card-header text-center">My tournaments</h5>
         <div class="card-body">
-          {% for tournament in user.tournaments %}
+          {% if future_tournaments|length != 0 %}
+          <h6>Future</h6>
+          {% endif %}
+          {% for tournament in future_tournaments %}
           <div class="row">
             <div class="col">
               <a class="text-decoration-none text-black" href="/tournament/profile/{{ tournament.id }}">{{ tournament.name }}</a>
@@ -49,6 +52,19 @@
             </div>
           </div>
           {% endfor %}
+          {% if past_tournaments|length != 0 %}
+          <h6>Past</h6>           
+          {% endif %}
+          {% for tournament in past_tournaments %}
+          <div class="row">
+            <div class="col">
+              <a class="text-decoration-none text-black" href="/tournament/profile/{{ tournament.id }}">{{ tournament.name }}</a>
+            </div>
+            <div class="col">
+              <p class="text-muted">{{ tournament.date.strftime("%m/%d/%Y %I:%M%p") }}</p>
+            </div>
+          </div>
+          {% endfor %}        
         </div>
       </div>
     </div>
