@@ -29,8 +29,8 @@
         {% for game in games %}
         <div class="card">
             <div class="card-body">
-                <p>White: <a href="/profile/{{game['white'].id}}" class="text-decoration-none text-black">{{game["white"].username}} {{"🏆" if game["winner"]}}</a></p>
-                <p>Black: <a href="/profile/{{game['black'].id}}" class="text-decoration-none text-black">{{game["black"].username}} {{"🏆" if not game["winner"]}}</a></p>
+                <p>White: <a href="/profile/{{game['white'].id}}" class="text-decoration-none text-black">{{game["white"].username}} {{"🏆" if game["winner"] != -1}}</a></p>
+                <p>Black: <a href="/profile/{{game['black'].id}}" class="text-decoration-none text-black">{{game["black"].username}} {{"🏆" if game["winner"] != 1}}</a></p>
             </div>
         </div>
         {% endfor %}
