@@ -8,7 +8,7 @@
         {% for user in tournament.users %}
         <div class="row">
         <div class="col">
-            <p>{{ user.firstname }}</p>
+            <a href="/profile/{{user.id}}" class="text-decoration-none text-black">{{ user.firstname + " " + user.lastname }}</a>
         </div>
         <div class="col">
             <p class="text-muted">{{ user.rating }}</p>

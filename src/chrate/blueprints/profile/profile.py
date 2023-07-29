@@ -21,7 +21,6 @@ def profile():
         return redirect("/login")
     future_tournaments = [t for t in user.tournaments if t.date >= datetime.now()]
     past_tournaments = [t for t in user.tournaments if t.date < datetime.now()]
-    print(future_tournaments, past_tournaments)
     return render_template("profile.html", user=user, future_tournaments=future_tournaments, past_tournaments=past_tournaments)
 
 

@@ -1,10 +1,10 @@
 import sqlalchemy as db
 import sqlalchemy.orm as dborm
 from sqlalchemy import Column
-from chrate import settings
+from chrate.settings import settings
 
 Base = dborm.declarative_base()
-engine = db.create_engine(settings.connection_args)
+engine = db.create_engine(settings.db_path)
 
 
 class UsersGames(Base):

@@ -1,10 +1,13 @@
-import os
+from pydantic_settings import BaseSettings
 
-DB = os.environ["DB"]
 
-CONN_STR = {
-    "sqlite": "sqlite:///database.db",
-    "postgresql": "postgresql://chess:lynbrook_chess@localhost:5432/chess_database"
-}
+class Settings(BaseSettings):
+    db_path: str = "sqlite:///database.db"
 
-connection_args = CONN_STR[DB]
+    class Config:
+        env_file = ".env"
+        env_file_encoding = 'utf-8'
+        env_prefix = 'CHRATE__'
+
+
+settings = Settings()
