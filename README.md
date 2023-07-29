@@ -1,16 +1,9 @@
 # Chrate
 
-If you don't have [homebrew](https://brew.sh/) install it.  
-Run after the installation:
-```bash
-brew insall direnv
-```
-
 ## Setup tutorial
 
 First run:
 ```bash
-direnv allow
 pyton3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
