@@ -1,17 +1,22 @@
-# chess-rating-system
+# chrate
 
-First after downloading install requirements:
+If you don't have [homebrew](https://brew.sh/) install it.  
+Run after the installation:
+```bash
+brew insall direnv
 pip install -r requirements.txt
+```
 
-The app is still developing, so yet it's only local. 
-Before running the app you should set up PostgreSQL database (migrating to SQLite is in the process).
-The database used is local, so there will be no data after initializing the app. Though you the app will work fine.
+
+To initialize a local database:
+```bash
+chcli db init
+```
 
 To run the app:
+```bash
 chcli websrv
+```
 
-To initialize the database:
-chcli db init
+Then it will be available at [127.0.0.1:5000/](http://127.0.0.1:5000/)
 
-To clear the database:
-chcli db init -c
