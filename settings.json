@@ -1,5 +1,0 @@
-{
-    "SQLITE_DB_PATH": "sqlite:///database.db",
-    "POSTGRESQL_DB_PATH": "postgresql://chess:lynbrook_chess@localhost:5432/chess_database",
-    "ENGINE_USED": "postgresql://chess:lynbrook_chess@localhost:5432/chess_database"
-}

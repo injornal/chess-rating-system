@@ -1,22 +1,11 @@
 import sqlalchemy as db
 import sqlalchemy.orm as dborm
 from sqlalchemy import Column
-import json
-
-with open('settings.json') as settings_file:
-    settings = json.load(settings_file)
+from chrate import settings
 
 Base = dborm.declarative_base()
-engine = db.create_engine(settings["ENGINE_USED"])
+engine = db.create_engine(settings.connection_args)
 
-
-# users_games = db.Table(
-#     "users_games",
-#     Base.metadata,
-#     db.Column("game_id", db.ForeignKey("games.id")),
-#     db.Column("user_id", db.ForeignKey("users.id")),
-#     db.Column("color", db.Boolean)
-# )
 
 class UsersGames(Base):
     __tablename__ = "users_games"
