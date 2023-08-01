@@ -1,4 +1,4 @@
-"""add tournament description
+"""add admin_tournament description
 
 Revision ID: b3191bcbe809
 Revises: 5b3b85f23bef

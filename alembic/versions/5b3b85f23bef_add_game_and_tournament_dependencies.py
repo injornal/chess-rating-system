@@ -1,4 +1,4 @@
-"""add game and tournament dependencies
+"""add game and admin_tournament dependencies
 
 Revision ID: 5b3b85f23bef
 Revises: 

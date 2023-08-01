@@ -1,7 +1,18 @@
 {% extends 'base.html' %} 
 
 {% block content %}
-<h1 class="text-center">Tournaments (dev)</h1>
-<a class="btn btn-primary" href="/tournament/create">Create tournament</a>
-<a class="btn btn-primary" href="/tournament/game/record">Record game</a>
+<div class="card">
+  <div class="card-body">
+    {% for tournament in tournaments %}
+    <div class="row">
+      <div class="col">
+        <a class="text-decoration-none text-black" href="/tournament/profile/{{ tournament.id }}">{{ tournament.name }}</a>
+      </div>
+      <div class="col">
+        <p class="text-muted">{{ tournament.date.strftime("%m/%d/%Y %I:%M%p") }}</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
 {% endblock %}
