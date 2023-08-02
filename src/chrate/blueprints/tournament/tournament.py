@@ -4,6 +4,7 @@ from chrate.model.rating import Tournaments, engine, Users
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from datetime import datetime
+from flask_login import login_required, current_user
 
 tournament_bp = blueprints.Blueprint("admin_tournament", __name__, template_folder="templates",
                                      url_prefix="/tournament")
@@ -11,9 +12,10 @@ tournament_bp.register_blueprint(game_bp)
 
 
 @tournament_bp.route("/")
+@login_required
 def tournament_home():
     with Session(engine) as session:
-        user = select(Users).where(Users.id == flask_session["user_id"])
+        user = select(Users).where(Users.id == current_user.id)
         user = session.execute(user).first()[0]
         tournaments = user.tournaments
     return render_template("tournament.html", tournaments=tournaments)
@@ -42,10 +44,11 @@ def profile(tournament_id):
 
 
 @tournament_bp.route("/register/<tournament_id>")
+@login_required
 def register(tournament_id):
     with Session(engine) as session:
         tournament = select(Tournaments).where(Tournaments.id == int(tournament_id))
-        user = select(Users).where(Users.id == flask_session["user_id"])
+        user = select(Users).where(Users.id == current_user.id)
         user = session.execute(user).first()[0]
         tournament = session.execute(tournament).first()[0]
 
@@ -61,6 +64,7 @@ def register(tournament_id):
 
 
 @tournament_bp.route("/create", methods=["GET", "POST"])
+@login_required
 def create():
     if request.method == "GET":
         return render_template("create.html")
@@ -80,5 +84,6 @@ def create():
 
 
 @tournament_bp.route("/created-tournaments")
+@login_required
 def created_tournaments():
     return redirect("/tournament")

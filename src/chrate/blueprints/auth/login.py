@@ -3,12 +3,13 @@ from chrate.model.rating import Users, engine
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from hashlib import sha256
+from flask_login import login_user, logout_user, login_required
 
-login_bp = blueprints.Blueprint("login", __name__, template_folder="templates", url_prefix="/login")
+auth_bp = blueprints.Blueprint("auth", __name__, template_folder="templates", url_prefix="/auth")
 
 
-@login_bp.route("/", methods=["GET", "POST"])
-def sign_in():
+@auth_bp.route("/login", methods=["GET", "POST"])
+def login():
     if request.method == "GET":
         return render_template("login.html")
     else:
@@ -16,19 +17,18 @@ def sign_in():
         password = sha256(request.form.get("password").encode()).hexdigest()
         with Session(engine) as session:
             query = select(Users).where(Users.email == email)
-            user = session.execute(query).first()
-            if user:
-                user = user[0]
+            user = session.execute(query).first()[0]
 
         if user and user.password == password:
-            flask_session["user_id"] = user.id
+            login_user(user)
             return redirect("/profile")
         else:
             flash("Wrong password or username", "warning")
             return render_template("login.html")
 
 
-@login_bp.route("/logout")
+@auth_bp.route("/logout")
+@login_required
 def logout():
-    del flask_session["user_id"]
+    logout_user()
     return redirect("/")

@@ -11,7 +11,6 @@
       <div class="container">
         <a class="navbar-brand" href="/">Chess</a>
         <ul class="navbar-nav">
-          {% if "user_id" in session %}
           <li>
             <a href="/admin" class="nav-link">Admin app</a>
           </li>
@@ -22,13 +21,11 @@
             <a class="nav-link" href="/profile">Profile</a>
           </li>
           <li class="nav-item">
-            <a href="/login/logout" class="nav-link">Sign out</a>
+            <a class="nav-link" href="/auth/logout">Sign out</a>
           </li>
-          {% else %}
           <li class="nav-item">
-            <a class="nav-link" href="/login">Sign in | Register</a>
+            <a class="nav-link" href="/auth/login">Sign in | Register</a>
           </li>
-          {% endif %}
         </ul>
       </div>
     </nav>

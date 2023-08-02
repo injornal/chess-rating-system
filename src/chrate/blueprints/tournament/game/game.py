@@ -4,12 +4,14 @@ from sqlalchemy import select
 from chrate.model.rating import engine, Games, Users, UsersGames, Tournaments
 from chrate.rating.game import Game as GameModel
 from chrate.rating.player import Player as PlayerModel
+from flask_login import login_required
 
 
 game_bp = blueprints.Blueprint("game", __name__, template_folder="templates", url_prefix="/game")
 
 
 @game_bp.route("/record", methods=["GET", "POST"])
+@login_required
 def game_record():
     if request.method == "GET":
         return render_template('record.html')

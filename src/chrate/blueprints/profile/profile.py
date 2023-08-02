@@ -3,22 +3,21 @@ from flask import blueprints, render_template, session as flask_session, redirec
 from chrate.model.rating import Users, engine, Tournaments
 from sqlalchemy.orm import Session
 from sqlalchemy import select
+from flask_login import login_required, current_user
 
 profile_bp = blueprints.Blueprint("profile", __name__, template_folder="templates", url_prefix="/profile")
 
 
 @profile_bp.route("/")
+@login_required
 def profile():
-    if "user_id" in flask_session:
-        with Session(engine) as session:
-            query = select(Users).where(Users.id == flask_session["user_id"])
-            user = session.execute(query).first()
-            if user:
-                user = user[0]
-            else:
-                return redirect("/login")
-    else:
-        return redirect("/login")
+    with Session(engine) as session:
+        query = select(Users).where(Users.id == current_user.id)
+        user = session.execute(query).first()
+        if user:
+            user = user[0]
+        else:
+            return redirect("/auth")
     future_tournaments = [t for t in user.tournaments if t.date >= datetime.now()]
     past_tournaments = [t for t in user.tournaments if t.date < datetime.now()]
     return render_template("profile.html", user=user, future_tournaments=future_tournaments, past_tournaments=past_tournaments)

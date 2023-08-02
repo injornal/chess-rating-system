@@ -2,6 +2,7 @@ import sqlalchemy as db
 import sqlalchemy.orm as dborm
 from sqlalchemy import Column
 from chrate.settings import settings
+from flask_login import UserMixin
 
 Base = dborm.declarative_base()
 engine = db.create_engine(settings.db_path)
@@ -24,7 +25,7 @@ users_tournaments = db.Table(
 )
 
 
-class Users(Base):
+class Users(Base, UserMixin):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(255), nullable=False)
