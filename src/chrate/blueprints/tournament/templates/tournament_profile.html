@@ -27,11 +27,19 @@
     <h5 class="card-header">Games</h5>
     <div class="card-body">
         {% for game in games %}
-        <div class="card">
-            <div class="card-body">
-                <p>White: <a href="/profile/{{game['white'].id}}" class="text-decoration-none text-black">{{game["white"].username}} {{"🏆" if game["winner"] != -1}}</a></p>
-                <p>Black: <a href="/profile/{{game['black'].id}}" class="text-decoration-none text-black">{{game["black"].username}} {{"🏆" if game["winner"] != 1}}</a></p>
-            </div>
+        <div class="col-3">
+            <table class="table table-bordered">
+                <tr>
+                    <th><a href="/profile/{{game['white'].id}}"
+                        class="text-decoration-none text-black">{{game["white"].username}}</a></th>
+                    <th>{{game["white_score"]}}</th>
+                </tr>
+                <tr>
+                    <th><a href="/profile/{{game['black'].id}}"
+                        class="text-decoration-none text-black">{{game["black"].username}}</a></th>
+                    <th>{{game["black_score"]}}</th>
+                </tr>
+            </table>
         </div>
         {% endfor %}
     </div>
