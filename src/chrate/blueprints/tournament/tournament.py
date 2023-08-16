@@ -27,27 +27,7 @@ def profile(tournament_id):
         query = select(Tournaments).where(Tournaments.id == tournament_id)
         tournament = session.execute(query).first()[0]
 
-    games = []
-    for round1 in tournament.rounds:
-        for game in round1.games:
-            for assoc in game.users:
-                if assoc.color:
-                    white = assoc.users
-                else:
-                    black = assoc.users
-            scores = {
-                -1: 0,
-                0: 0.5,
-                1: 1
-            }
-            games.append({
-                "white": white,
-                "white_score": scores[game.result],
-                "black": black,
-                "black_score": scores[-game.result]
-            })
-
-    return render_template("tournament_profile.html", tournament=tournament, games=games)
+    return render_template("tournament_profile.html", tournament=tournament)
 
 
 @tournament_bp.route("/register/<tournament_id>")
@@ -90,7 +70,17 @@ def create():
         return redirect("/admin_tournament")
 
 
+# TODO: created tournaments
 @tournament_bp.route("/created-tournaments")
 @login_required
 def created_tournaments():
     return redirect("/tournament")
+
+
+@tournament_bp.route("/edit/<tournament_id>")
+@login_required
+def edit(tournament_id):
+    with Session(engine) as session:
+        tournament = select(Tournaments).where(Tournaments.id == int(tournament_id))
+        tournament = session.execute(tournament).first()[0]
+    return render_template("tournament_profile.html", tournament=tournament)

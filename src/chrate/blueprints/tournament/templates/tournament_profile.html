@@ -38,7 +38,7 @@
                         {% if assoc.color %}
                             <th>{{ game.result }}</th>
                         {% else %}
-                            <th>{{ -game.result }}</th>
+                            <th>{{ 1 - game.result }}</th>
                         {% endif %}
                     </tr>
                     {% endfor %}

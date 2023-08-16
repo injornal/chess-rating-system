@@ -28,10 +28,10 @@ def upload():
 
         game1 = Games(result=1)
         round1.games.append(game1)
-        game2 = Games(result=-1)
+        game2 = Games(result=0)
         round1.games.append(game2)
 
-        game3 = Games(result=0)
+        game3 = Games(result=0.5)
         round2.games.append(game3)
 
         game1_result = 1
@@ -87,5 +87,9 @@ def upload():
         user3.rating = player3_model.rating
         user4.rating = player4_model.rating
 
-        session.add_all([user1, user2, user3, user4, game1, game2, game3, tournament, round2, round1])
+        empty_tournament = Tournaments(name="Empty", date=datetime.datetime.now(), rated=True)
+        empty_tournament.users.append(user1)
+        empty_tournament.users.append(user2)
+
+        session.add_all([user1, user2, user3, user4, game1, game2, game3, tournament, round2, round1, empty_tournament])
         session.commit()

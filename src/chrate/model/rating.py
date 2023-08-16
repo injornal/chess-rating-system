@@ -1,6 +1,6 @@
 import sqlalchemy as db
 import sqlalchemy.orm as dborm
-from sqlalchemy import Column, ForeignKey, create_engine, Boolean, Integer, String, Table, DateTime
+from sqlalchemy import Column, ForeignKey, create_engine, Boolean, Integer, String, Table, DateTime, Float
 from sqlalchemy.orm import relationship, declarative_base
 from chrate.settings import settings
 from flask_login import UserMixin
@@ -45,7 +45,7 @@ class Users(Base, UserMixin):
 class Games(Base):
     __tablename__ = "games"
     id = Column(Integer, primary_key=True)
-    result = Column(Integer)
+    result = Column(Float)
 
     users = relationship("UsersGames", back_populates="games", lazy="subquery")
     # tournament_id = Column(Integer, ForeignKey("tournaments.id"))
