@@ -1,7 +1,6 @@
 import click
 from chrate.model.rating import create_db, drop_db
 
-
 @click.group(help="Operate DB")
 def db():
     pass

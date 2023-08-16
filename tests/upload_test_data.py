@@ -11,42 +11,81 @@ def upload():
         password = sha256("1234".encode()).hexdigest()
         user1 = Users(firstname="Kostiantyn", lastname="Babich", username="kbabich", email="kbabich@gmail.com", password=password)
         user2 = Users(firstname="Vladyslav", lastname="Cheremshynkii", username="vhcerem", email="vcherem", password=password)
+        user3 = Users(firstname="Vasya", lastname="Pupkin", username="vpupkin", email="vpupkin", password=password)
+        user4 = Users(firstname="Foo", lastname="Boo", username="fboo", email="fboo", password=password)
 
-        session.add_all([user1, user2])
+        round1 = Rounds(round=1)
+        round2 = Rounds(round=2)
 
         tournament = Tournaments(name="Titled Tuesday", date=datetime.datetime.now(), rated=True)
 
         tournament.users.append(user1)
         tournament.users.append(user2)
+        tournament.users.append(user3)
+        tournament.users.append(user4)
+        tournament.rounds.append(round1)
+        tournament.rounds.append(round2)
 
-        session.add(tournament)
+        game1 = Games(result=1)
+        round1.games.append(game1)
+        game2 = Games(result=-1)
+        round1.games.append(game2)
 
-        game = Games(result=1)
+        game3 = Games(result=0)
+        round2.games.append(game3)
 
-        session.add(game)
-
-        game_result = "white"
+        game1_result = 1
+        game2_result = 0
+        game3_result = 0.5
 
         assoc1 = UsersGames(color=True)
         assoc1.users = user1
-        game.users.append(assoc1)
+        game1.users.append(assoc1)
 
         assoc2 = UsersGames(color=False)
         assoc2.users = user2
-        game.users.append(assoc2)
+        game1.users.append(assoc2)
 
-        session.add_all([assoc1, assoc2, game])
+        session.add_all([assoc1, assoc2])
+
+        assoc1 = UsersGames(color=True)
+        assoc1.users = user3
+        game2.users.append(assoc1)
+
+        assoc2 = UsersGames(color=False)
+        assoc2.users = user4
+        game2.users.append(assoc2)
+
+        session.add_all([assoc1, assoc2])
+
+        assoc1 = UsersGames(color=False)
+        assoc1.users = user1
+        game3.users.append(assoc1)
+
+        assoc2 = UsersGames(color=True)
+        assoc2.users = user4
+        game3.users.append(assoc2)
+
+        session.add_all([assoc1, assoc2])
 
         player1_model = Player(1000)
         player2_model = Player(1000)
-        game_model = Game(player1_model, player2_model)
-        results = {"white": 1, "tie": 0.5, "black": 0}
-        game_model.game(results[game_result])
+        player3_model = Player(1000)
+        player4_model = Player(1000)
+
+        game1_model = Game(player1_model, player2_model)
+        game1_model.game(game1_result)
+
+        game2_model = Game(player3_model, player4_model)
+        game2_model.game(game2_result)
+
+        game3_model = Game(player1_model, player4_model)
+        game3_model.game(game3_result)
 
         user1.rating = player1_model.rating
         user2.rating = player2_model.rating
+        user3.rating = player3_model.rating
+        user4.rating = player4_model.rating
 
-        tournament.games.append(game)
-
-        session.add_all([user1, user2, game, tournament, assoc1, assoc2])
+        session.add_all([user1, user2, user3, user4, game1, game2, game3, tournament, round2, round1])
         session.commit()

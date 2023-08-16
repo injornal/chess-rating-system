@@ -28,23 +28,24 @@ def profile(tournament_id):
         tournament = session.execute(query).first()[0]
 
     games = []
-    for game in tournament.games:
-        for assoc in game.users:
-            if assoc.color:
-                white = assoc.users
-            else:
-                black = assoc.users
-        scores = {
-            -1: 0,
-            0: 0.5,
-            1: 1
-        }
-        games.append({
-            "white": white,
-            "white_score": scores[game.result],
-            "black": black,
-            "black_score": scores[-game.result]
-        })
+    for round1 in tournament.rounds:
+        for game in round1.games:
+            for assoc in game.users:
+                if assoc.color:
+                    white = assoc.users
+                else:
+                    black = assoc.users
+            scores = {
+                -1: 0,
+                0: 0.5,
+                1: 1
+            }
+            games.append({
+                "white": white,
+                "white_score": scores[game.result],
+                "black": black,
+                "black_score": scores[-game.result]
+            })
 
     return render_template("tournament_profile.html", tournament=tournament, games=games)
 
