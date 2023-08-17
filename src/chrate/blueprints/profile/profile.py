@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import blueprints, render_template, session as flask_session, redirect
+from flask import blueprints, render_template, session as flask_session, redirect, url_for
 from chrate.model.rating import Users, engine, Tournaments
 from sqlalchemy.orm import Session
 from sqlalchemy import select
@@ -17,7 +17,7 @@ def profile():
         if user:
             user = user[0]
         else:
-            return redirect("/auth")
+            return redirect(url_for("auth"))
     future_tournaments = [t for t in user.tournaments if t.date >= datetime.now()]
     past_tournaments = [t for t in user.tournaments if t.date < datetime.now()]
     return render_template("profile.html", user=user, future_tournaments=future_tournaments, past_tournaments=past_tournaments)

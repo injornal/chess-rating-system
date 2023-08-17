@@ -1,4 +1,4 @@
-from flask import blueprints, request, render_template, redirect, flash
+from flask import blueprints, request, render_template, redirect, flash, url_for
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from chrate.model.rating import engine, Games, Users, UsersGames, Tournaments
@@ -59,4 +59,4 @@ def game_record():
             session.add_all([submitted_game, player1, player2, assoc1, assoc2, trn])
             session.commit()
         flash("Game recorded", "success")
-        return redirect(f"/tournament/profile/{tournament_id}")
+        return redirect(url_for("tournament.profile", tournament_id=tournament_id))

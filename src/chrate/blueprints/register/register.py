@@ -1,5 +1,5 @@
 from hashlib import sha256
-from flask import request, render_template, blueprints, redirect
+from flask import request, render_template, blueprints, redirect, url_for
 from chrate.model.rating import Users, engine
 from sqlalchemy.orm import Session
 
@@ -21,4 +21,4 @@ def register():
         with Session(engine) as session:
             session.add(user)
             session.commit()
-        return redirect("/auth")
+        return redirect(url_for("auth"))

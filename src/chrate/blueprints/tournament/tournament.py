@@ -6,7 +6,7 @@ from sqlalchemy import select
 from datetime import datetime
 from flask_login import login_required, current_user
 
-tournament_bp = blueprints.Blueprint("admin_tournament", __name__, template_folder="templates",
+tournament_bp = blueprints.Blueprint("tournament", __name__, template_folder="templates",
                                      url_prefix="/tournament")
 tournament_bp.register_blueprint(game_bp)
 
@@ -44,7 +44,7 @@ def register(tournament_id):
         session.add(tournament)
         session.commit()
     flash("Registered", "success")
-    return redirect("/profile")
+    return redirect(url_for("profile"))
 
 
 # ONLY ADMIN FUNCTIONALITY #
@@ -67,14 +67,14 @@ def create():
             session.commit()
 
         flash("Tournaments created", "success")
-        return redirect("/admin_tournament")
+        return redirect(url_for("admin_tournament"))
 
 
 # TODO: created tournaments
 @tournament_bp.route("/created-tournaments")
 @login_required
 def created_tournaments():
-    return redirect("/tournament")
+    return redirect(url_for("tournament"))
 
 
 @tournament_bp.route("/edit/<tournament_id>")
@@ -83,4 +83,11 @@ def edit(tournament_id):
     with Session(engine) as session:
         tournament = select(Tournaments).where(Tournaments.id == int(tournament_id))
         tournament = session.execute(tournament).first()[0]
-    return render_template("tournament_profile.html", tournament=tournament)
+    return render_template("tournament_profile_admin.html", tournament=tournament)
+
+
+@tournament_bp.route("/edit/<tournament_id>/create-pairings")
+@login_required
+def create_pairings(tournament_id):
+    flash("successfully created", "success")
+    return redirect(url_for("tournament.edit", tournament_id=tournament_id))
