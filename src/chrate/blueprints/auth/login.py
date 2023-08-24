@@ -21,7 +21,7 @@ def login():
 
         if user and user.password == password:
             login_user(user)
-            return redirect(url_for("profile"))
+            return redirect(url_for("profile.profile"))
         else:
             flash("Wrong password or username", "warning")
             return render_template("login.html")

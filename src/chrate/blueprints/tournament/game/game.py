@@ -1,6 +1,8 @@
 from flask import blueprints, request, render_template, redirect, flash, url_for
 from sqlalchemy.orm import Session
 from sqlalchemy import select
+
+from chrate.admin.admin import role_required
 from chrate.model.rating import engine, Games, Users, UsersGames, Tournaments
 from chrate.rating.game import Game as GameModel
 from chrate.rating.player import Player as PlayerModel
@@ -13,6 +15,7 @@ game_bp = blueprints.Blueprint("game", __name__, template_folder="templates", ur
 # TODO: fix game record
 @game_bp.route("/record", methods=["GET", "POST"])
 @login_required
+@role_required
 def game_record():
     if request.method == "GET":
         return render_template('record.html')
