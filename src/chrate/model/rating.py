@@ -37,6 +37,8 @@ class Users(Base, UserMixin):
     middlename = Column(String(255))
     lastname = Column(String(255), nullable=False)
 
+    role_id = Column(Integer, ForeignKey("roles.id"))
+
     tournaments = relationship("Tournaments", secondary=users_tournaments, back_populates="users",
                                      lazy="subquery")
     games = relationship("UsersGames", back_populates="users", lazy="subquery")
@@ -48,7 +50,6 @@ class Games(Base):
     result = Column(Float)
 
     users = relationship("UsersGames", back_populates="games", lazy="subquery")
-    # tournament_id = Column(Integer, ForeignKey("tournaments.id"))
     round_id = Column(Integer, ForeignKey("rounds.id"))
 
 
@@ -62,7 +63,6 @@ class Tournaments(Base):
 
     users = relationship("Users", secondary=users_tournaments, back_populates="tournaments", lazy="subquery")
     rounds = relationship("Rounds", lazy="subquery")
-    # games = relationship("Games", lazy="subquery")
     
     
 class Rounds(Base):
@@ -72,6 +72,14 @@ class Rounds(Base):
     
     tournament_id = Column(Integer, ForeignKey("tournaments.id"))
     games = relationship("Games", lazy="subquery")
+
+
+class Roles(Base):
+    __tablename__ = "roles"
+    id = Column(Integer, primary_key=True)
+    name = Column(String(255), nullable=False)
+
+    users = relationship("Users", lazy="subquery")
 
 
 def create_db():

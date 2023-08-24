@@ -59,7 +59,7 @@ def register(tournament_id):
 
 @tournament_bp.route("/create", methods=["GET", "POST"])
 @login_required
-@role_required
+@role_required()
 def create():
     if request.method == "GET":
         return render_template("create.html")
@@ -81,14 +81,14 @@ def create():
 # TODO: created tournaments
 @tournament_bp.route("/created-tournaments")
 @login_required
-@role_required
+@role_required()
 def created_tournaments():
     return redirect(url_for("tournament.home"))
 
 
 @tournament_bp.route("/edit/<tournament_id>")
 @login_required
-@role_required
+@role_required()
 def edit(tournament_id):
     tournament = load_tournament(tournament_id)
     return render_template("tournament_profile_admin.html", tournament=tournament)
@@ -96,7 +96,7 @@ def edit(tournament_id):
 
 @tournament_bp.route("/edit/<tournament_id>/create-pairings")
 @login_required
-@role_required
+@role_required()
 def create_pairings(tournament_id):
     # TODO: player pairings
     tournament = load_tournament(tournament_id)

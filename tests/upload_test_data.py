@@ -1,4 +1,7 @@
 from hashlib import sha256
+
+from sqlalchemy import select
+
 from chrate.model.rating import *
 import datetime
 from chrate.rating.game import *
@@ -8,11 +11,23 @@ from sqlalchemy.orm import Session
 
 def upload():
     with Session(engine) as session:
+        admin = Roles(name="ADMIN")
+        user = Roles(name="USER")
+        session.add_all([admin, user])
+        session.commit()
+
+    with Session(engine) as session:
+        query = select(Roles).where(Roles.name == "ADMIN")
+        admin = session.execute(query).first()[0]
+
+        query = select(Roles).where(Roles.name == "USER")
+        user = session.execute(query).first()[0]
+
         password = sha256("1234".encode()).hexdigest()
-        user1 = Users(firstname="Kostiantyn", lastname="Babich", username="kbabich", email="kbabich@gmail.com", password=password)
-        user2 = Users(firstname="Vladyslav", lastname="Cheremshynkii", username="vhcerem", email="vcherem", password=password)
-        user3 = Users(firstname="Vasya", lastname="Pupkin", username="vpupkin", email="vpupkin", password=password)
-        user4 = Users(firstname="Foo", lastname="Boo", username="fboo", email="fboo", password=password)
+        user1 = Users(firstname="Kostiantyn", lastname="Babich", username="kbabich", email="kbabich@gmail.com", password=password, role_id=admin.id)
+        user2 = Users(firstname="Vladyslav", lastname="Cheremshynkii", username="vhcerem", email="vcherem@gmail.com", password=password, role_id=user.id)
+        user3 = Users(firstname="Vasya", lastname="Pupkin", username="vpupkin", email="vpupkin", password=password, role_id=user.id)
+        user4 = Users(firstname="Foo", lastname="Boo", username="fboo", email="fboo", password=password, role_id=user.id)
 
         round1 = Rounds(round=1)
         round2 = Rounds(round=2)

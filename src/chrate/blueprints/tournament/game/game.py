@@ -15,7 +15,7 @@ game_bp = blueprints.Blueprint("game", __name__, template_folder="templates", ur
 # TODO: fix game record
 @game_bp.route("/record", methods=["GET", "POST"])
 @login_required
-@role_required
+@role_required()
 def game_record():
     if request.method == "GET":
         return render_template('record.html')

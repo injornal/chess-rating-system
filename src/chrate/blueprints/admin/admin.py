@@ -7,6 +7,6 @@ admin_bp = blueprints.Blueprint("admin", __name__, template_folder="templates", 
 
 @admin_bp.route("/")
 @login_required
-@role_required
+@role_required()
 def admin():
     return render_template("admin.html")
