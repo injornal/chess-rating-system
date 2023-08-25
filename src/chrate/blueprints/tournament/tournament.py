@@ -1,6 +1,6 @@
 from flask import blueprints, render_template, request, redirect, url_for, flash, session as flask_session
 from chrate.blueprints.tournament.game.game import game_bp
-from chrate.model.rating import Tournaments, engine, Users
+from chrate.model.rating import Tournaments, engine, Users, Games, Rounds, UsersGames
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from datetime import datetime
@@ -17,6 +17,7 @@ def load_tournament(tournament_id):
         tournament = select(Tournaments).where(Tournaments.id == int(tournament_id))
         tournament = session.execute(tournament).first()[0]
     return tournament
+
 
 @tournament_bp.route("/")
 @login_required
@@ -100,10 +101,30 @@ def edit(tournament_id):
 def create_pairings(tournament_id):
     # TODO: player pairings
     tournament = load_tournament(tournament_id)
-    # load all users (furthermore you can load all the winners of the previous round and do the same for them)
-    users = tournament.users
-    # sort by rating
-    # users_sorted_by_rating
-    # create pairs
+    sorted_users = sorted(tournament.users, key=lambda x: x.rating)  # TODO: select the winners of the previous round
+    pairs = []  # players divided into pairs
+    for i in range(0, len(sorted_users), 2):
+        pairs.append((sorted_users[i], sorted_users[i+1]))
+
+    with Session(engine) as session:
+        for pair in pairs:
+            white_player = pair[0]
+            black_player = pair[1]
+
+            round1 = Rounds(round=1)  # TODO: change to current round
+            tournament.rounds.append(round1)
+            game1 = Games(result=None)
+            round1.games.append(game1)
+
+            assoc1 = UsersGames(color=True)
+            assoc1.users = white_player
+            game1.users.append(assoc1)
+
+            assoc2 = UsersGames(color=False)
+            assoc2.users = black_player
+            game1.users.append(assoc2)
+
+            session.add_all((white_player, black_player, round1, game1, assoc1, assoc2, tournament))
+        session.commit()
     flash("successfully created", "success")
     return redirect(url_for("tournament.edit", tournament_id=tournament_id))

@@ -35,10 +35,14 @@
                     <tr>
                         <th><a href="/profile/{{ assoc.users.id }}"
                             class="text-decoration-none text-black">{{ assoc.users.username }}</a></th>
-                        {% if assoc.color %}
-                            <th>{{ game.result }}</th>
+                        {% if game.result is not none %}
+                            {% if assoc.color %}
+                                <th>{{ game.result }}</th>
+                            {% else %}
+                                <th>{{ 1 - game.result }}</th>
+                            {% endif %}
                         {% else %}
-                            <th>{{ 1 - game.result }}</th>
+                            <th>0</th>
                         {% endif %}
                     </tr>
                     {% endfor %}
