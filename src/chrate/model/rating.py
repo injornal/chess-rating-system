@@ -1,5 +1,3 @@
-import sqlalchemy as db
-import sqlalchemy.orm as dborm
 from sqlalchemy import Column, ForeignKey, create_engine, Boolean, Integer, String, Table, DateTime, Float
 from sqlalchemy.orm import relationship, declarative_base
 from chrate.settings import settings
@@ -38,6 +36,7 @@ class Users(Base, UserMixin):
     lastname = Column(String(255), nullable=False)
 
     role_id = Column(Integer, ForeignKey("roles.id"))
+    role = relationship("Roles", back_populates="users", lazy="subquery")
 
     tournaments = relationship("Tournaments", secondary=users_tournaments, back_populates="users",
                                      lazy="subquery")

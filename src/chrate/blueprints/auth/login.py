@@ -1,4 +1,4 @@
-from flask import blueprints, request, render_template, redirect, session as flask_session, flash, url_for
+from flask import blueprints, request, render_template, redirect, flash, url_for
 from chrate.model.rating import Users, engine
 from sqlalchemy import select
 from sqlalchemy.orm import Session

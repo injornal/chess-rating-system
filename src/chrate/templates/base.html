@@ -11,9 +11,12 @@
       <div class="container">
         <a class="navbar-brand" href="/">Chess</a>
         <ul class="navbar-nav">
-          <li>
-            <a href="/admin" class="nav-link">Admin app</a>
-          </li>
+          {% if current_user.is_authenticated %}
+            {% if current_user.role.name == "ADMIN" %}
+            <li>
+              <a href="/admin" class="nav-link">Admin app</a>
+            </li>
+            {% endif %}
           <li class="nav-item">
             <a class="nav-link" href="/tournament">Tournaments</a>
           </li>
@@ -23,9 +26,11 @@
           <li class="nav-item">
             <a class="nav-link" href="/auth/logout">Sign out</a>
           </li>
+          {% else %}
           <li class="nav-item">
             <a class="nav-link" href="/auth/login">Sign in | Register</a>
           </li>
+          {% endif %}
         </ul>
       </div>
     </nav>
