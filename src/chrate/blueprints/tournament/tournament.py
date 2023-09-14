@@ -101,30 +101,35 @@ def edit(tournament_id):
 def create_pairings(tournament_id):
     # TODO: player pairings
     tournament = load_tournament(tournament_id)
-    sorted_users = sorted(tournament.users, key=lambda x: x.rating)  # TODO: select the winners of the previous round
-    pairs = []  # players divided into pairs
-    for i in range(0, len(sorted_users), 2):
-        pairs.append((sorted_users[i], sorted_users[i+1]))
-
-    with Session(engine) as session:
-        for pair in pairs:
-            white_player = pair[0]
-            black_player = pair[1]
-
-            round1 = Rounds(round=1)  # TODO: change to current round
-            tournament.rounds.append(round1)
-            game1 = Games(result=None)
-            round1.games.append(game1)
-
-            assoc1 = UsersGames(color=True)
-            assoc1.users = white_player
-            game1.users.append(assoc1)
-
-            assoc2 = UsersGames(color=False)
-            assoc2.users = black_player
-            game1.users.append(assoc2)
-
-            session.add_all((white_player, black_player, round1, game1, assoc1, assoc2, tournament))
-        session.commit()
-    flash("successfully created", "success")
+    rnd = max(tournament.rounds, key=lambda x: x.round)
+    winners = []
+    for g in rnd.games:
+        for u in g.users:
+            pass
+    #         winners.append(...)  # select users that won
+    # winners = sorted(winners, key=lambda x: x.rating)  # TODO: select the winners of the previous round
+    # pairs = []  # players divided into pairs
+    # for i in range(0, len(winners), 2):
+    #     pairs.append((winners[i], winners[i+1]))
+    #
+    # with Session(engine) as session:
+    #     for pair in pairs:
+    #         white_player = pair[0]
+    #         black_player = pair[1]
+    #
+    #         tournament.rounds.append(rnd)
+    #         game1 = Games(result=None)
+    #         rnd.games.append(game1)
+    #
+    #         assoc1 = UsersGames(color=True)
+    #         assoc1.users = white_player
+    #         game1.users.append(assoc1)
+    #
+    #         assoc2 = UsersGames(color=False)
+    #         assoc2.users = black_player
+    #         game1.users.append(assoc2)
+    #
+    #         session.add_all((white_player, black_player, rnd, game1, assoc1, assoc2, tournament))
+    #     session.commit()
+    # flash("successfully created", "success")
     return redirect(url_for("tournament.edit", tournament_id=tournament_id))

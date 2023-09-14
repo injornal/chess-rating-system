@@ -12,6 +12,7 @@ class UsersGames(Base):
     game_id = Column(ForeignKey("games.id"), primary_key=True)
     user_id = Column(ForeignKey("users.id"), primary_key=True)
     color = Column(Boolean)
+    score = Column(Float, default=0)
     users = relationship("Users", back_populates="games", lazy="subquery")
     games = relationship("Games", back_populates="users", lazy="subquery")
 
@@ -46,7 +47,6 @@ class Users(Base, UserMixin):
 class Games(Base):
     __tablename__ = "games"
     id = Column(Integer, primary_key=True)
-    result = Column(Float)
 
     users = relationship("UsersGames", back_populates="games", lazy="subquery")
     round_id = Column(Integer, ForeignKey("rounds.id"))
