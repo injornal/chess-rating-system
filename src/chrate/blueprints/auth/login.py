@@ -17,14 +17,19 @@ def login():
         password = sha256(request.form.get("password").encode()).hexdigest()
         with Session(engine) as session:
             query = select(Users).where(Users.email == email)
-            user = session.execute(query).first()[0]
+            user = session.execute(query).first()
+            if user is not None:
+                user = user[0]
+            else:
+                flash("Wrong password or username", "warning")
+                return redirect(url_for("auth.login"))
 
         if user and user.password == password:
             login_user(user)
             return redirect(url_for("profile.profile"))
         else:
             flash("Wrong password or username", "warning")
-            return render_template("login.html")
+            return redirect(url_for("auth.login"))
 
 
 @auth_bp.route("/logout")

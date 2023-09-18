@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import blueprints, render_template, session as flask_session, redirect, url_for
+from flask import blueprints, render_template, session as flask_session, redirect, url_for, flash
 from chrate.model.rating import Users, engine, Tournaments
 from sqlalchemy.orm import Session
 from sqlalchemy import select
@@ -27,5 +27,10 @@ def profile():
 def public_profile(user_id):
     with Session(engine) as session:
         query = select(Users).where(Users.id == user_id)
-        user = session.execute(query).first()[0]
+        user = session.execute(query).first()
+        if user is not None:
+            user = user[0]
+        else:
+            flash("User doesn't exist", "warning")
+            return redirect(url_for("home.home"))
     return render_template("public-profile.html", user=user)

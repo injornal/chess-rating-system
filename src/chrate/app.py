@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, flash, redirect, url_for
 from chrate.blueprints.profile.profile import profile_bp
 from chrate.blueprints.register.register import register_bp
 from chrate.blueprints.auth.login import auth_bp
@@ -24,7 +24,12 @@ login_manager.init_app(app)
 def load_user(user_id):
     with Session(engine) as session:
         query = select(Users).where(Users.id == user_id)
-        user = session.execute(query).first()[0]
+        user = session.execute(query).first()
+        if user is not None:
+            user = user[0]
+        else:
+            flash("User doesn't exist", "warning")
+            return redirect(url_for("auth.login"))
     return user
 
 

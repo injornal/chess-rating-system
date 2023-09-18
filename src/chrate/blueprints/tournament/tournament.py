@@ -15,7 +15,12 @@ tournament_bp.register_blueprint(game_bp)
 def load_tournament(tournament_id):
     with Session(engine) as session:
         tournament = select(Tournaments).where(Tournaments.id == int(tournament_id))
-        tournament = session.execute(tournament).first()[0]
+        tournament = session.execute(tournament).first()
+        if tournament is not None:
+            tournament = tournament[0]
+        else:
+            flash("Tournament doesn't exist", "warning")
+            return redirect(url_for("home.home"))
     return tournament
 
 
@@ -23,8 +28,7 @@ def load_tournament(tournament_id):
 @login_required
 def home():
     with Session(engine) as session:
-        user = select(Users).where(Users.id == current_user.id)
-        user = session.execute(user).first()[0]
+        user = current_user
         tournaments = user.tournaments
     return render_template("tournament.html", tournaments=tournaments)
 
@@ -33,7 +37,12 @@ def home():
 def profile(tournament_id):
     with Session(engine) as session:
         query = select(Tournaments).where(Tournaments.id == tournament_id)
-        tournament = session.execute(query).first()[0]
+        tournament = session.execute(query).first()
+        if tournament is not None:
+            tournament = tournament[0]
+        else:
+            flash("Tournament doesn't exist", "warning")
+            return redirect(url_for("home.home"))
 
     return render_template("tournament_profile.html", tournament=tournament)
 
@@ -41,11 +50,17 @@ def profile(tournament_id):
 @tournament_bp.route("/register/<tournament_id>")
 @login_required
 def register(tournament_id):
-    with Session(engine) as session:
+    with (Session(engine) as session):
         tournament = select(Tournaments).where(Tournaments.id == int(tournament_id))
-        user = select(Users).where(Users.id == current_user.id)
-        user = session.execute(user).first()[0]
-        tournament = session.execute(tournament).first()[0]
+        user = current_user
+        # select(Users).where(Users.id == current_user.id)
+        # user = session.execute(user).first()[0]
+        tournament = session.execute(tournament).first()
+        if tournament is not None:
+            tournament = tournament[0]
+        else:
+            flash("Tournament doesn't exist", "warning")
+            return redirect(url_for("home.home"))
 
         tournament.users.append(user)
 
@@ -107,7 +122,7 @@ def create_pairings(tournament_id):
         for u in g.users:
             pass
     #         winners.append(...)  # select users that won
-    # winners = sorted(winners, key=lambda x: x.rating)  # TODO: select the winners of the previous round
+    # winners = sorted(winners, key=lambda x: x.rating)
     # pairs = []  # players divided into pairs
     # for i in range(0, len(winners), 2):
     #     pairs.append((winners[i], winners[i+1]))
