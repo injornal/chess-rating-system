@@ -41,43 +41,39 @@ def upload():
         tournament.rounds.append(round1)
         tournament.rounds.append(round2)
 
-        game1 = Games(result=1)
+        game1 = Games()
         round1.games.append(game1)
-        game2 = Games(result=0)
+        game2 = Games()
         round1.games.append(game2)
 
-        game3 = Games(result=0.5)
+        game3 = Games()
         round2.games.append(game3)
 
-        game1_result = 1
-        game2_result = 0
-        game3_result = 0.5
-
-        assoc1 = UsersGames(color=True)
+        assoc1 = UsersGames(color=True, score=1)
         assoc1.users = user1
         game1.users.append(assoc1)
 
-        assoc2 = UsersGames(color=False)
+        assoc2 = UsersGames(color=False, score=0)
         assoc2.users = user2
         game1.users.append(assoc2)
 
         session.add_all([assoc1, assoc2])
 
-        assoc1 = UsersGames(color=True)
+        assoc1 = UsersGames(color=True, score=0.5)
         assoc1.users = user3
         game2.users.append(assoc1)
 
-        assoc2 = UsersGames(color=False)
+        assoc2 = UsersGames(color=False, score=0.5)
         assoc2.users = user4
         game2.users.append(assoc2)
 
         session.add_all([assoc1, assoc2])
 
-        assoc1 = UsersGames(color=False)
+        assoc1 = UsersGames(color=False, score=0)
         assoc1.users = user1
         game3.users.append(assoc1)
 
-        assoc2 = UsersGames(color=True)
+        assoc2 = UsersGames(color=True, score=1)
         assoc2.users = user4
         game3.users.append(assoc2)
 
@@ -89,13 +85,13 @@ def upload():
         player4_model = Player(1000)
 
         game1_model = Game(player1_model, player2_model)
-        game1_model.game(game1_result)
+        game1_model.game(1)
 
         game2_model = Game(player3_model, player4_model)
-        game2_model.game(game2_result)
+        game2_model.game(0.5)
 
         game3_model = Game(player1_model, player4_model)
-        game3_model.game(game3_result)
+        game3_model.game(0)
 
         user1.rating = player1_model.rating
         user2.rating = player2_model.rating
