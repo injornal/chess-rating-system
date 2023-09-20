@@ -30,7 +30,6 @@ def upload():
         user4 = Users(firstname="Foo", lastname="Boo", username="fboo", email="fboo", password=password, role_id=user.id)
 
         round1 = Rounds(round=1)
-        round2 = Rounds(round=2)
 
         tournament = Tournaments(name="Titled Tuesday", date=datetime.datetime.now(), rated=True)
 
@@ -39,15 +38,11 @@ def upload():
         tournament.users.append(user3)
         tournament.users.append(user4)
         tournament.rounds.append(round1)
-        tournament.rounds.append(round2)
 
         game1 = Games()
         round1.games.append(game1)
         game2 = Games()
         round1.games.append(game2)
-
-        game3 = Games()
-        round2.games.append(game3)
 
         assoc1 = UsersGames(color=True, score=1)
         assoc1.users = user1
@@ -68,14 +63,6 @@ def upload():
         game2.users.append(assoc2)
 
         session.add_all([assoc1, assoc2])
-
-        assoc1 = UsersGames(color=False, score=0)
-        assoc1.users = user1
-        game3.users.append(assoc1)
-
-        assoc2 = UsersGames(color=True, score=1)
-        assoc2.users = user4
-        game3.users.append(assoc2)
 
         session.add_all([assoc1, assoc2])
 
@@ -102,5 +89,5 @@ def upload():
         empty_tournament.users.append(user1)
         empty_tournament.users.append(user2)
 
-        session.add_all([user1, user2, user3, user4, game1, game2, game3, tournament, round2, round1, empty_tournament])
+        session.add_all([user1, user2, user3, user4, game1, game2, tournament, round1, empty_tournament])
         session.commit()

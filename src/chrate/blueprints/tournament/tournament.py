@@ -114,37 +114,64 @@ def edit(tournament_id):
 @login_required
 @role_required()
 def create_pairings(tournament_id):
-    # TODO: player pairings
-    tournament = load_tournament(tournament_id)
-    rnd = max(tournament.rounds, key=lambda x: x.round)
-    winners = []
-    for g in rnd.games:
-        for u in g.users:
-            pass
-    #         winners.append(...)  # select users that won
-    # winners = sorted(winners, key=lambda x: x.rating)
-    # pairs = []  # players divided into pairs
-    # for i in range(0, len(winners), 2):
-    #     pairs.append((winners[i], winners[i+1]))
-    #
-    # with Session(engine) as session:
-    #     for pair in pairs:
-    #         white_player = pair[0]
-    #         black_player = pair[1]
-    #
-    #         tournament.rounds.append(rnd)
-    #         game1 = Games(result=None)
-    #         rnd.games.append(game1)
-    #
-    #         assoc1 = UsersGames(color=True)
-    #         assoc1.users = white_player
-    #         game1.users.append(assoc1)
-    #
-    #         assoc2 = UsersGames(color=False)
-    #         assoc2.users = black_player
-    #         game1.users.append(assoc2)
-    #
-    #         session.add_all((white_player, black_player, rnd, game1, assoc1, assoc2, tournament))
-    #     session.commit()
-    # flash("successfully created", "success")
+    # TODO: odd number of players problem
+    with Session(engine) as session:
+        tournament = load_tournament(tournament_id)
+        if len(tournament.rounds) > 0:
+            rnd = max(tournament.rounds, key=lambda x: x.round)
+            winners = []
+            for g in rnd.games:
+                winners.append(max(g.users, key=lambda u: u.score))
+            winners = [user.users for user in sorted(winners, key=lambda x: x.users.rating)]
+            pairs = []
+            for i in range(0, len(winners), 2):
+                pairs.append((winners[i], winners[i+1]))
+            new_rnd = Rounds(round=rnd.round+1)
+            for pair in pairs:
+                white_player = pair[0]
+                black_player = pair[1]
+
+                tournament.rounds.append(new_rnd)
+
+                game = Games()
+                new_rnd.games.append(game)
+
+                assoc1 = UsersGames(color=True)
+                assoc1.users = white_player
+                game.users.append(assoc1)
+
+                assoc2 = UsersGames(color=False)
+                assoc2.users = black_player
+                game.users.append(assoc2)
+
+                session.add_all((white_player, black_player, game, assoc1, assoc2))
+            session.add_all([new_rnd, tournament])
+            session.commit()
+        else:
+            rnd = Rounds(round=1)
+            winners = sorted(tournament.users, key=lambda user: user.rating)
+            pairs = []
+            for i in range(0, len(winners), 2):
+                pairs.append((winners[i], winners[i + 1]))
+            for pair in pairs:
+                white_player = pair[0]
+                black_player = pair[1]
+
+                tournament.rounds.append(rnd)
+
+                game = Games()
+                rnd.games.append(game)
+
+                assoc1 = UsersGames(color=True)
+                assoc1.users = white_player
+                game.users.append(assoc1)
+
+                assoc2 = UsersGames(color=False)
+                assoc2.users = black_player
+                game.users.append(assoc2)
+
+                session.add_all((white_player, black_player, game, assoc1, assoc2))
+            session.add_all([rnd, tournament])
+            session.commit()
+    flash("successfully created", "success")
     return redirect(url_for("tournament.edit", tournament_id=tournament_id))
