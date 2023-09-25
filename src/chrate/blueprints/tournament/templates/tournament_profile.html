@@ -7,12 +7,12 @@
     <div class="card-body">
         {% for user in tournament.users %}
         <div class="row">
-        <div class="col">
-            <a href="/profile/{{user.id}}" class="text-decoration-none text-black">{{ user.firstname + " " + user.lastname }}({{ user.username }})</a>
-        </div>
-        <div class="col">
-            <p class="text-muted">{{ user.rating }}</p>
-        </div>
+            <div class="col">
+                <a href="/profile/{{user.id}}" class="text-decoration-none text-black">{{ user.firstname + " " + user.lastname }}({{ user.username }})</a>
+            </div>
+            <div class="col">
+                <p class="text-muted">{{ user.rating }}</p>
+            </div>
         </div>
         {% endfor %}
     </div>
@@ -28,20 +28,26 @@
     <div class="card-body">
         <div class="row">
             {% for round in tournament.rounds %}
-            <div class="col">
+            <div class="col" style="padding-top:{{ 65 * (round.round - 1) }}px;">
                 {% for game in round.games %}
-                <table class="table table-bordered">
-                    {% for assoc in game.users %}
-                    <tr>
-                        <th><a href="/profile/{{ assoc.users.id }}"
-                            class="text-decoration-none text-black">{{ assoc.users.username }}</a></th>
-                            <th>{{ assoc.score }}</th>
-                    </tr>
-                    {% endfor %}
-                </table>
-            {% endfor %}
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            {% for assoc in game.users %}
+                            <tr>
+                                <th><a href="/profile/{{ assoc.users.id }}"
+                                    class="text-decoration-none text-black">{{ assoc.users.username }}</a></th>
+                                    <th>{{ assoc.score }}</th>
+                            </tr>
+                            {% endfor %}
+                         </table>
+                    </div>
+                    {% block game_record %}
+                    {% endblock %}
+                </div>
+                {% endfor %}
             </div>
-        {% endfor %}
+            {% endfor %}
         </div>
     </div>
 </div>

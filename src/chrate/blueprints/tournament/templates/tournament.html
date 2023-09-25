@@ -6,7 +6,7 @@
     {% for tournament in tournaments %}
     <div class="row">
       <div class="col">
-        <a class="text-decoration-none text-black" href="/tournament/profile/{{ tournament.id }}">{{ tournament.name }}</a>
+        <a class="text-decoration-none text-black" href="/tournament/{{ tournament.id }}/profile">{{ tournament.name }}</a>
       </div>
       <div class="col">
         <p class="text-muted">{{ tournament.date.strftime("%m/%d/%Y %I:%M%p") }}</p>

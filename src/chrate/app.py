@@ -2,7 +2,6 @@ from flask import Flask, flash, redirect, url_for
 from chrate.blueprints.profile.profile import profile_bp
 from chrate.blueprints.register.register import register_bp
 from chrate.blueprints.auth.login import auth_bp
-from chrate.blueprints.tournament.game.game import game_bp
 from chrate.blueprints.home.home import home_bp
 from chrate.blueprints.tournament.tournament import tournament_bp
 from chrate.blueprints.admin.admin import admin_bp
@@ -36,7 +35,6 @@ def load_user(user_id):
 app.register_blueprint(profile_bp)
 app.register_blueprint(register_bp)
 app.register_blueprint(auth_bp)
-app.register_blueprint(game_bp)
 app.register_blueprint(home_bp)
 app.register_blueprint(tournament_bp)
 app.register_blueprint(admin_bp)

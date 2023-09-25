@@ -1,5 +1,10 @@
 {% extends 'tournament_profile.html' %}
 
+{% block game_record %}
+<div class="card-footer">
+    <div class="btn btn-primary"><a class="text-decoration-none text-white" href="#">Record game result</a></div>
+</div>
+{% endblock %}
 {% block admin %}
-<a href="/tournament/edit/{{ tournament.id }}/create-pairings">CREATE PAIRINGS</a>
+<a href="/tournament/{{ tournament.id }}/edit/create-pairings">CREATE PAIRINGS</a>
 {% endblock %}

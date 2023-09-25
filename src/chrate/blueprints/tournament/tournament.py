@@ -1,6 +1,5 @@
-from flask import blueprints, render_template, request, redirect, url_for, flash, session as flask_session
-from chrate.blueprints.tournament.game.game import game_bp
-from chrate.model.rating import Tournaments, engine, Users, Games, Rounds, UsersGames
+from flask import blueprints, render_template, request, redirect, url_for, flash
+from chrate.model.rating import Tournaments, engine, Games, Rounds, UsersGames
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from datetime import datetime
@@ -9,7 +8,6 @@ from chrate.admin.admin import role_required
 
 tournament_bp = blueprints.Blueprint("tournament", __name__, template_folder="templates",
                                      url_prefix="/tournament")
-tournament_bp.register_blueprint(game_bp)
 
 
 def load_tournament(tournament_id):
@@ -33,7 +31,12 @@ def home():
     return render_template("tournament.html", tournaments=tournaments)
 
 
-@tournament_bp.route("/profile/<int:tournament_id>")
+@tournament_bp.route("/<int:tournament_id>")
+def profile_redirect(tournament_id):
+    return redirect(url_for("tournament.profile", tournament_id=tournament_id))
+
+
+@tournament_bp.route("/<tournament_id>/profile")
 def profile(tournament_id):
     with Session(engine) as session:
         query = select(Tournaments).where(Tournaments.id == tournament_id)
@@ -47,7 +50,7 @@ def profile(tournament_id):
     return render_template("tournament_profile.html", tournament=tournament)
 
 
-@tournament_bp.route("/register/<tournament_id>")
+@tournament_bp.route("/<tournament_id>/register")
 @login_required
 def register(tournament_id):
     with (Session(engine) as session):
@@ -102,7 +105,7 @@ def created_tournaments():
     return redirect(url_for("tournament.home"))
 
 
-@tournament_bp.route("/edit/<tournament_id>")
+@tournament_bp.route("/<tournament_id>/edit")
 @login_required
 @role_required()
 def edit(tournament_id):
@@ -110,7 +113,7 @@ def edit(tournament_id):
     return render_template("tournament_profile_admin.html", tournament=tournament)
 
 
-@tournament_bp.route("/edit/<tournament_id>/create-pairings")
+@tournament_bp.route("<tournament_id>/edit/create-pairings")
 @login_required
 @role_required()
 def create_pairings(tournament_id):
@@ -175,3 +178,57 @@ def create_pairings(tournament_id):
             session.commit()
     flash("successfully created", "success")
     return redirect(url_for("tournament.edit", tournament_id=tournament_id))
+
+
+@tournament_bp.route("/<tournament_id>/record_game", methods=["GET", "POST"])
+@login_required
+def game_record(tournament_id):
+    """
+    Get to the page by pressing a button in the game icon in
+    tournament profile. Get users from the icon.
+    """
+    if request.method == "GET":
+        return render_template('record.html', tournament_id=tournament_id)
+    else:
+        pass
+#         first_player_name = request.form.get("wname")
+#         second_player_name = request.form.get("bname")
+#         result = request.form.get("res")
+#         tournament_id = request.form.get("trn")
+#
+#         with Session(engine) as session:
+#             submitted_game = Games(
+#                 result=results[result]
+#             )
+#
+#             trn_query = select(Tournaments).where(Tournaments.id == tournament_id)
+#             trn = session.execute(trn_query).first()[0]
+#             trn.games.append(submitted_game)
+#
+#             p1query = select(Users).where(Users.firstname == first_player_name.split()[0],
+#                                           Users.lastname == first_player_name.split()[-1])
+#             player1 = session.execute(p1query).first()[0]
+#             p2query = select(Users).where(Users.firstname == second_player_name.split()[0],
+#                                           Users.lastname == second_player_name.split()[-1])
+#             player2 = session.execute(p2query).first()[0]
+#
+#             assoc1 = UsersGames(color=True)
+#             assoc1.users = player1
+#             submitted_game.users.append(assoc1)
+#
+#             assoc2 = UsersGames(color=False)
+#             assoc2.users = player2
+#             submitted_game.users.append(assoc2)
+#
+#             player1_model = PlayerModel(player1.rating)
+#             player2_model = PlayerModel(player2.rating)
+#             game_model = GameModel(player1_model, player2_model)
+#             game_model.game(results[result])
+#
+#             player1.rating = player1_model.rating
+#             player2.rating = player2_model.rating
+#
+#             session.add_all([submitted_game, player1, player2, assoc1, assoc2, trn])
+#             session.commit()
+#         flash("Game recorded", "success")
+#         return redirect(url_for("tournament.profile", tournament_id=tournament_id))
