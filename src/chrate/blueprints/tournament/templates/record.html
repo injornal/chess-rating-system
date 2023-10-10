@@ -1,14 +1,10 @@
 {% extends 'base.html' %} {% block content %}
-<form action="/tournament/{{ tournament_id }}/game/record" method="post">
-  <label for="white_user">white piece player's username:</label><br />
-  <input type="text" id="white_user" name="white_user" /><br />
-  <label for="black_user">black piece player's username:</label><br />
-  <input type="text" id="black_user" name="black_user" /><br /><br />
+<form action="/tournament/{{ tournament_id }}/game/{{ game_id }}/record" method="post">
   <label for="result">winner:</label><br />
   <select name="result" id="result">
-    <option value="white">white</option>
-    <option value="tie">tie</option>
-    <option value="black">black</option>
+    <option value="1">white</option>
+    <option value="0">tie</option>
+    <option value="-1">black</option>
   </select>
   <input type="submit" />
 </form>

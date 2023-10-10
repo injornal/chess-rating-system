@@ -1,10 +1,58 @@
-{% extends 'tournament_profile.html' %}
+{% extends 'base.html' %}
 
-{% block game_record %}
-<div class="card-footer">
-    <div class="btn btn-primary"><a class="text-decoration-none text-white" href="#">Record game result</a></div>
+{% block content %}
+<h1 class="text-center">{{ tournament.name }}</h1>
+<div class="card">
+    <h5 class="card-header text-center">Participants</h5>
+    <div class="card-body">
+        {% for user in tournament.users %}
+        <div class="row">
+            <div class="col">
+                <a href="/profile/{{user.id}}" class="text-decoration-none text-black">{{ user.firstname + " " + user.lastname }}({{ user.username }})</a>
+            </div>
+            <div class="col">
+                <p class="text-muted">{{ user.rating }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 </div>
-{% endblock %}
-{% block admin %}
+<div class="card">
+    <h5 class="card-header">Description</h5>
+    <div class="card-body">
+        {{ tournament.description }}
+    </div>
+</div>
+<div class="card">
+    <h5 class="card-header">Games</h5>
+    <div class="card-body">
+        <div class="row">
+            {% for round in tournament.rounds %}
+            <div class="col" style="padding-top:{{ 65 * (round.round - 1) }}px;">
+                {% for game in round.games %}
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            {% for assoc in game.users %}
+                            <tr>
+                                <th><a href="/profile/{{ assoc.users.id }}"
+                                    class="text-decoration-none text-black">{{ assoc.users.username }}</a></th>
+                                    <th>{{ assoc.score }}</th>
+                            </tr>
+                            {% endfor %}
+                         </table>
+                    </div>
+                    <div class="card-footer">
+                        <div class="btn btn-primary"><a class="text-decoration-none text-white" href="/tournament/{{ tournament.id }}/game/{{ game.id }}/record">Record game result</a></div>
+                    </div>
+                    {% block game_record %}
+                    {% endblock %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
 <a href="/tournament/{{ tournament.id }}/edit/create-pairings">CREATE PAIRINGS</a>
 {% endblock %}

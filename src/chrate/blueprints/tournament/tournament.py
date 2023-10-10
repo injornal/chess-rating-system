@@ -5,6 +5,8 @@ from sqlalchemy import select
 from datetime import datetime
 from flask_login import login_required, current_user
 from chrate.admin.admin import role_required
+from chrate.rating.game import Game
+from chrate.rating.player import Player
 
 tournament_bp = blueprints.Blueprint("tournament", __name__, template_folder="templates",
                                      url_prefix="/tournament")
@@ -180,55 +182,38 @@ def create_pairings(tournament_id):
     return redirect(url_for("tournament.edit", tournament_id=tournament_id))
 
 
-@tournament_bp.route("/<tournament_id>/record_game", methods=["GET", "POST"])
+@tournament_bp.route("/<tournament_id>/game/<game_id>/record", methods=["GET", "POST"])
 @login_required
-def game_record(tournament_id):
-    """
-    Get to the page by pressing a button in the game icon in
-    tournament profile. Get users from the icon.
-    """
+def game_record(tournament_id, game_id):
     if request.method == "GET":
-        return render_template('record.html', tournament_id=tournament_id)
+        return render_template('record.html', game_id=game_id, tournament_id=tournament_id)
     else:
-        pass
-#         first_player_name = request.form.get("wname")
-#         second_player_name = request.form.get("bname")
-#         result = request.form.get("res")
-#         tournament_id = request.form.get("trn")
-#
-#         with Session(engine) as session:
-#             submitted_game = Games(
-#                 result=results[result]
-#             )
-#
-#             trn_query = select(Tournaments).where(Tournaments.id == tournament_id)
-#             trn = session.execute(trn_query).first()[0]
-#             trn.games.append(submitted_game)
-#
-#             p1query = select(Users).where(Users.firstname == first_player_name.split()[0],
-#                                           Users.lastname == first_player_name.split()[-1])
-#             player1 = session.execute(p1query).first()[0]
-#             p2query = select(Users).where(Users.firstname == second_player_name.split()[0],
-#                                           Users.lastname == second_player_name.split()[-1])
-#             player2 = session.execute(p2query).first()[0]
-#
-#             assoc1 = UsersGames(color=True)
-#             assoc1.users = player1
-#             submitted_game.users.append(assoc1)
-#
-#             assoc2 = UsersGames(color=False)
-#             assoc2.users = player2
-#             submitted_game.users.append(assoc2)
-#
-#             player1_model = PlayerModel(player1.rating)
-#             player2_model = PlayerModel(player2.rating)
-#             game_model = GameModel(player1_model, player2_model)
-#             game_model.game(results[result])
-#
-#             player1.rating = player1_model.rating
-#             player2.rating = player2_model.rating
-#
-#             session.add_all([submitted_game, player1, player2, assoc1, assoc2, trn])
-#             session.commit()
-#         flash("Game recorded", "success")
-#         return redirect(url_for("tournament.profile", tournament_id=tournament_id))
+        result = float(request.form.get("result"))
+        with Session(engine) as session:
+            game = select(Games).where(Games.id == game_id)
+            game = session.execute(game).first()[0]
+
+            white_assoc = game.users[0]
+            black_assoc = game.users[0]
+
+            if not game.users[0].color:
+                white_assoc, black_assoc = black_assoc, white_assoc
+
+            white = white_assoc.users
+            black = black_assoc.users
+
+            white_assoc.score += result
+            black_assoc.score += 1 - result
+
+            player1_model = Player(white.rating)
+            player2_model = Player(black.rating)
+            game_model = Game(player1_model, player2_model)
+            game_model.game(result)
+
+            white.rating = player1_model.rating
+            black.rating = player2_model.rating
+
+            session.add_all([game, white, black, white_assoc, black_assoc])
+            session.commit()
+        flash("Game recorded", "success")
+        return redirect(url_for("tournament.edit", tournament_id=tournament_id))
